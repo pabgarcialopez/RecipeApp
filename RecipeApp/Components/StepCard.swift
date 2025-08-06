@@ -14,7 +14,7 @@ struct StepCard: View {
     let order: Int
     
     // Lets us switch between an editable and a fixed only-read StepCard.
-    let editingEnabled: Bool
+    let editingDisabled: Bool
     
     let powderBlueColor = Color(red: 0.80, green: 0.90, blue: 1.0)
     
@@ -36,11 +36,11 @@ struct StepCard: View {
                 TextField("Instruction", text: $step.instruction, axis: .vertical)
                     .font(.body)
             }
-            .disabled(editingEnabled)
+            .disabled(editingDisabled)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding([.top, .bottom], 8)
-        .background(editingEnabled ? Color.clear : powderBlueColor)
+        .background(editingDisabled ? powderBlueColor : Color.clear)
         .clipShape(RoundedRectangle(cornerRadius: 15))
     }
 }
@@ -48,5 +48,5 @@ struct StepCard: View {
 
 #Preview {
     @Previewable @State var previewStep = Step(title: "Step X", instruction: "Blablablablablabla")
-    StepCard(step: $previewStep, order: 5, editingEnabled: false)
+    StepCard(step: $previewStep, order: 5, editingDisabled: false)
 }

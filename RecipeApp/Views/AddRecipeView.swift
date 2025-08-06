@@ -21,16 +21,20 @@ struct AddRecipeView: View {
     @State private var steps = [Step]()
     @State private var ingredients = [Ingredient]()
     @State private var imageName: String? = nil
+    
     // Other useful variables
     @State private var selectedPic: PhotosPickerItem?
     @State private var image: Image? = nil
     
     @Binding var recipes: [Recipe]
     
+    let allIngredients = ["None"] + Ingredient.ingredients
+    let allMeasurements = ["None"] + Ingredient.measurements
+    
     var body: some View {
         NavigationStack {
             Form {
-                Section("Upload picture") {
+                Section {
                     VStack {
                         PhotosPicker(selection: $selectedPic) {
                             if let image = image {
@@ -41,7 +45,6 @@ struct AddRecipeView: View {
                                     
                             } else {
                                 ContentUnavailableView("Upload image", systemImage: "fork.knife.circle", description: Text("Better in landscape orientation"))
-                                    .frame(maxWidth: .infinity)
                             }
                         }
                         .onChange(of: selectedPic) {
@@ -50,7 +53,7 @@ struct AddRecipeView: View {
                     }
                     .frame(maxWidth: .infinity, alignment: .center)
                         
-                    if image != nil {
+                    if self.image != nil {
                         Button("Delete current picture", role: .destructive, action: deleteCurrentPicture)
                         .frame(maxWidth: .infinity, alignment: .center) // Center button
                     }
@@ -58,7 +61,7 @@ struct AddRecipeView: View {
                 
                 
                 
-                Section("Recipe basics") {
+                Section("Basics") {
                     TextField("Name", text: $name)
                     TextField("Description", text: $description, axis: .vertical)
                 }
@@ -66,6 +69,10 @@ struct AddRecipeView: View {
                 Section("Time (minutes)") {
                     TextField("20", value: $time, formatter: NumberFormatter())
                         .keyboardType(.numberPad)
+                }
+                
+                Section("Number of people") {
+                    Stepper("^[\(numPeople) person](inflect: true)", value: $numPeople, in: 1...16)
                 }
                 
                 Section("Difficulty") {
@@ -88,7 +95,7 @@ struct AddRecipeView: View {
                 
                 Section(header: Text("Steps")) {
                     ForEach(Array($steps.enumerated()), id: \.element.id) { index, $step in
-                        StepCard(step: $step, order: index + 1, editingEnabled: true)
+                        StepCard(step: $step, order: index + 1, editingDisabled: false)
                     }
                     .onDelete(perform: deleteStep)
                     Button("Add step", systemImage: "plus", action: addStep)
@@ -97,10 +104,15 @@ struct AddRecipeView: View {
                 Section("Ingredients") {
                     ForEach($ingredients, id: \.id) { $ingredient in
                         VStack(alignment: .leading, spacing: 3) {
-                            // Top row: Ingredient Picker
-                            Picker("Pick an ingredient", selection: $ingredient.name) {
+                            
+                            // Ingredient name picker
+                            Picker("Pick an ingredient", selection: Binding(
+                                get: { ingredient.name },
+                                set: { ingredient.name = $0 }
+                            )) {
+                                Text("None").tag(Optional<String>.none)
                                 ForEach(Ingredient.ingredients, id: \.self) { item in
-                                    Text(item)
+                                    Text(item).tag(Optional(item))
                                 }
                             }
                             
@@ -116,25 +128,24 @@ struct AddRecipeView: View {
                                 }
                                                                 
                                 // Measurement picker
-                                HStack {
-                                    Picker("Unit", selection: $ingredient.measure) {
-                                        ForEach(Ingredient.measurements, id: \.self) { unit in
-                                            Text(unit)
-                                        }
+                                Picker("Unit", selection: Binding(
+                                    get: { ingredient.measure },
+                                    set: { ingredient.measure = $0 }
+                                )) {
+                                    Text("None").tag(Optional<String>.none)
+                                    ForEach(Ingredient.measurements, id: \.self) { unit in
+                                        Text(unit).tag(Optional(unit))
                                     }
                                 }
+                                
                             }
                         }
                     }
                     .onDelete(perform: deleteIngredient)
-                    
                     Button("Add ingredient", systemImage: "plus", action: addIngredient)
-                        .disabled(addIngredientDisable())
                 }
                 
-                Section("Number of people") {
-                    Stepper("^[\(numPeople) person](inflect: true)", value: $numPeople, in: 1...16)
-                }
+                
             }
             .navigationTitle("New recipe")
             .toolbar {
@@ -155,11 +166,7 @@ struct AddRecipeView: View {
     }
     
     func addIngredient() {
-        ingredients.append(Ingredient(name: "", quantity: 1, measure: "gram"))
-    }
-    
-    func addIngredientDisable() -> Bool {
-        return !ingredients.isEmpty && ingredients.last!.name.isEmpty
+        ingredients.append(Ingredient(name: nil, quantity: nil, measure: nil))
     }
     
     func deleteIngredient(at offsets: IndexSet) {
@@ -178,7 +185,15 @@ struct AddRecipeView: View {
     }
     
     func saveRecipeDisable() -> Bool {
-        return name.isEmpty || time == nil
+        let someIngredientHasName = ingredients.contains(where: { ingredient in
+            ingredient.name != nil && ingredient.name != ""
+        })
+        
+        let someStepHasTitle = steps.contains(where: { step in
+            step.title != ""
+        })
+        
+        return name.isEmpty || time == nil || !someIngredientHasName || !someStepHasTitle
     }
     
     func loadImage(from item: PhotosPickerItem?) {

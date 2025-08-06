@@ -13,7 +13,7 @@ struct IngredientCard: View {
     
     var body: some View {
         VStack {
-            Text(ingredient.name).bold()
+            Text(ingredient.name!).bold()
             // An ingredient might have nil quantity and measure.
             if ingredient.quantity != nil && ingredient.measure != nil {
                 Text("^[\(ingredient.quantity!, specifier: "%.2f") \(ingredient.measure!)](inflect: true)")

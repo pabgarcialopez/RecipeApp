@@ -9,7 +9,7 @@ import Foundation
 
 struct Ingredient: Hashable, Identifiable {
     let id = UUID()
-    var name: String
+    var name: String?
     var quantity: Double?
     var measure: String?
 }
