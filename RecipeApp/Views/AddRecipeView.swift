@@ -34,16 +34,15 @@ struct AddRecipeView: View {
     // Other useful general variables
     let allIngredients = ["None"] + IngredientModel.ingredients
     let allMeasurements = ["None"] + IngredientModel.measurements
-    @State private var path = NavigationPath()
     
     var body: some View {
-        NavigationStack(path: $path) {
+        NavigationStack {
             Form {
                 Section {
                     VStack {
                         PhotosPicker(selection: $selectedPic) {
-                            if let data = imageData, let uiImage = UIImage(data: data) {
-                                Image(uiImage: uiImage)
+                            if let imageData = imageData, let image = ImageModel(data: imageData).image {
+                                image
                                     .resizable()
                                     .scaledToFit()
                                     .frame(height: 200)
@@ -155,6 +154,7 @@ struct AddRecipeView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Save", action: saveRecipe)
+                        .buttonStyle(.borderedProminent)
                         .disabled(saveRecipeDisable())
                 }
 
@@ -204,7 +204,7 @@ struct AddRecipeView: View {
         if let data = imageData {
             let imageModel = ImageModel(data: data)
             modelContext.insert(imageModel)
-            recipe.photo = imageModel
+            recipe.imageModel = imageModel
         }
             
         modelContext.insert(recipe)

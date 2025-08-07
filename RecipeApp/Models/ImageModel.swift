@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftData
+import SwiftUI
 
 // We use a different model for Image's so they don't pose a performance issue.
 
@@ -16,6 +17,11 @@ class ImageModel: Identifiable {
     
     @Attribute(.externalStorage)
     var data: Data
+    
+    var image: Image? {
+        guard let uiImage = UIImage(data: data) else { return nil }
+        return Image(uiImage: uiImage)
+    }
 
     init(data: Data) {
         self.data = data

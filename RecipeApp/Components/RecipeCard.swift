@@ -11,9 +11,7 @@ import SwiftUI
 struct RecipeCard: View {
     
     let recipe: RecipeModel
-    
-    let default_img = "RecipeCard_default"
-    
+        
     var shadowColor: Color {
         switch recipe.difficulty {
             case .easy: .green
@@ -48,13 +46,13 @@ struct RecipeCard: View {
     }
     
     var recipeImage: some View {
-        if let data = recipe.photo?.data,
+        if let data = recipe.imageModel?.data,
            let uiImage = UIImage(data: data) {
             return Image(uiImage: uiImage)
                 .resizable()
                 .scaledToFill()
         } else {
-            return Image("RecipeCard_default")
+            return Image(defaultRecipeCover)
                 .resizable()
                 .scaledToFill()
         }

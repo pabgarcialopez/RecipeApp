@@ -6,10 +6,6 @@
 	objectVersion = 77;
 	objects = {
 
-/* Begin PBXBuildFile section */
-		5BC86A4E2E43EAC800DE0879 /* AddRecipeTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC86A4D2E43EAC800DE0879 /* AddRecipeTestView.swift */; };
-/* End PBXBuildFile section */
-
 /* Begin PBXContainerItemProxy section */
 		5BCCF1472E3A976A00DEC853 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -41,7 +37,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		5BC86A4D2E43EAC800DE0879 /* AddRecipeTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddRecipeTestView.swift; sourceTree = "<group>"; };
 		5BCCF1392E3A976700DEC853 /* RecipeApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RecipeApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5BCCF1462E3A976A00DEC853 /* RecipeAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RecipeAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5BCCF1502E3A976A00DEC853 /* RecipeAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RecipeAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -93,7 +88,6 @@
 		5BCCF1302E3A976700DEC853 = {
 			isa = PBXGroup;
 			children = (
-				5BC86A4D2E43EAC800DE0879 /* AddRecipeTestView.swift */,
 				5BCCF13B2E3A976700DEC853 /* RecipeApp */,
 				5BCCF1492E3A976A00DEC853 /* RecipeAppTests */,
 				5BCCF1532E3A976A00DEC853 /* RecipeAppUITests */,
@@ -258,7 +252,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5BC86A4E2E43EAC800DE0879 /* AddRecipeTestView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

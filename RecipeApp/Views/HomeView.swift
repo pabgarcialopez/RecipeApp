@@ -6,17 +6,19 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct HomeView: View {
-    
-    let recipes: [RecipeModel]
+    @Query private var recipes: [RecipeModel]
     
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .center, spacing: 30) {
                     ForEach(recipes, id: \.id) { recipe in
-                        NavigationLink(value: recipe) {
+                        NavigationLink {
+                            RecipeDetailView(recipe: recipe) 
+                        } label: {
                             RecipeCard(recipe: recipe)
                         }
                         .buttonStyle(.plain)
@@ -26,14 +28,11 @@ struct HomeView: View {
                 .padding(.bottom, 25)
             }
             .navigationTitle("My recipes")
-            .navigationDestination(for: RecipeModel.self) { recipe in
-                RecipeDetailView(recipe: recipe)
-            }
         }
         
     }
 }
 
 #Preview {
-    HomeView(recipes: RecipeModel.sampleRecipes)
+    HomeView()
 }

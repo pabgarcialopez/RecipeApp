@@ -11,18 +11,18 @@ import SwiftData
 struct ContentView: View {
     
     @State private var selectedTab = 0
-    @Query private var recipes: [RecipeModel]
+    
 
     
     var body: some View {
                 
         TabView(selection: $selectedTab) {
-            HomeView(recipes: recipes)
+            HomeView()
                 .tabItem { Label("Home", systemImage: "house") }
                 .tag(0)
 
             AddRecipeView()
-                .tabItem { Label("New", systemImage: "plus") }
+                .tabItem { Label("New recipe", systemImage: "plus") }
                 .tag(1)
 
             ProfileView()
