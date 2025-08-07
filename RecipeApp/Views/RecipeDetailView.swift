@@ -14,36 +14,77 @@ struct RecipeDetailView: View {
     @Environment(\.dismiss) private var dismiss
     
     let recipe: RecipeModel
-    
+
+    @State private var newNumPeople: Int = defaultNumPeople
     @State private var deleteAlertShowing = false
+    
+    var sharingURL: String {
+        return "\(recipe.name)"
+    }
 
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(alignment: .leading) {
-                    (recipe.imageModel?.image ?? Image(defaultRecipeCover))
-                        .resizable()
-                        .scaledToFit()
-                        .clipShape(RoundedRectangle(cornerRadius: 15))
+                VStack { // To apply padding. Padding on ScrollView looks weird.
                     
-                    VStack(alignment: .leading, spacing: 10) {
-                        Text(recipe.name)
-                            .font(.title).bold()
-                        HStack(spacing: 25) {
-                            specificsBox(systemName: "clock", text: Text("\(recipe.time) mins"))
-                            specificsBox(systemName: "chart.bar", text: Text(recipe.difficulty.description))
-                            specificsBox(systemName: "dollarsign", text: Text(recipe.cost.description))
-                        }
-                        .padding()
-                        .background(Color.cyan.opacity(0.2))
-                        .clipShape(Capsule())
-                        .frame(maxWidth: .infinity, alignment: .center)
+                    // Recipe photo, name and details
+                    VStack(alignment: .leading) {
+                        (recipe.imageModel?.image ?? Image(defaultRecipeCover))
+                            .resizable()
+                            .scaledToFit()
+                            .clipShape(RoundedRectangle(cornerRadius: 15))
                         
+                        VStack(alignment: .leading, spacing: 10) {
+                            Text(recipe.name)
+                                .font(.title).bold()
+                            HStack(spacing: 25) {
+                                specificsBox(systemName: "clock", text: Text("\(recipe.time) mins"))
+                                specificsBox(systemName: "chart.bar", text: Text(recipe.difficulty.description))
+                                specificsBox(systemName: "dollarsign", text: Text(recipe.cost.description))
+                            }
+                            .padding()
+                            .background(Color.cyan.opacity(0.2))
+                            .clipShape(Capsule())
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            
+                        }
+                        .padding([.top, .bottom], 10)
+                        
+                        Text(recipe.details)
+                            .font(.system(size: 18))
+                        
+                        // Ingredients
+                        VStack(alignment: .leading, spacing: 8) {
+                            
+                            HStack {
+                                Text("Ingredients")
+                                    .font(.title3).bold()
+                                
+                                Spacer()
+                                                                
+                                Stepper(value: $newNumPeople, in: numPeopleRange) {
+                                    Text("^[\(newNumPeople) person](inflect: true)")
+                                }
+                                .fixedSize()
+                            }
+                            
+                            ForEach(recipe.ingredients, id: \.id) { ingredient in
+                                IngredientCard(ingredient: ingredient)
+                            }
+                        }
+                        .padding(.top)
+                        
+                        // Steps
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Steps")
+                                .font(.title3).bold()
+                                .padding(.top)
+                            
+                            ForEach(Array(recipe.steps.enumerated()), id: \.element.id) { index, step in
+                                StepCard(step: step, order: index + 1)
+                            }
+                        }
                     }
-                    .padding([.top, .bottom], 10)
-                    
-                    Text(recipe.details)
-                        .font(.system(size: 18))
                 }
                 .padding()
             }
@@ -59,7 +100,7 @@ struct RecipeDetailView: View {
                             Button("Delete", systemImage: "trash", role: .destructive, action: toggleDeletionAlert)
                         }
                         
-                        ShareLink(item: "Hello!") {
+                        ShareLink(item: sharingURL) {
                             Label("Share", systemImage: "square.and.arrow.up")
                         }
                         
@@ -80,14 +121,13 @@ struct RecipeDetailView: View {
     }
     
     func deleteRecipe() {
+        dismiss() // Go back to HomeView()
         modelContext.delete(recipe)
         do {
             try modelContext.save()
         } catch {
             print("Failed to delete recipe: \(error)")
         }
-        
-        dismiss() // Go back to HomeView()
     }
     
     func specificsBox(systemName: String, text: Text) -> some View {

@@ -78,7 +78,7 @@ struct RecipeCard: View {
         .background(Color.white)
         .clipShape(RoundedRectangle(cornerRadius: 20))
         .shadow(color: shadowColor, radius: 5)
-        .padding([.leading, .trailing], 30)
+        .padding([.leading, .trailing], 15)
     }
     
 }

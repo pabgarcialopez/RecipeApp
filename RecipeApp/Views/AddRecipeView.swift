@@ -23,7 +23,7 @@ struct AddRecipeView: View {
     @State private var time: Int? = nil
     @State private var cost: Cost = .cheap
     @State private var difficulty: Difficulty = .easy
-    @State private var numPeople = 4
+    @State private var numPeople = defaultNumPeople
     @State private var steps = [StepModel]()
     @State private var ingredients = [IngredientModel]()
     @State private var imageData: Data? = nil
@@ -63,12 +63,11 @@ struct AddRecipeView: View {
                 }
                 
                 Section("Basics") {
-                TextField("Name", text: $name)
-                    .keyboardType(.default)
-                
-                TextField("Details", text: $details, axis: .vertical)
-                    .keyboardType(.default)
+                    TextField("Name", text: $name)
+                        .keyboardType(.default)
                     
+                    TextField("Details", text: $details, axis: .vertical)
+                        .keyboardType(.default)
                 }
                 
                 Section("Time (minutes)") {
@@ -77,7 +76,7 @@ struct AddRecipeView: View {
                 }
                 
                 Section("Number of people") {
-                    Stepper("^[\(numPeople) person](inflect: true)", value: $numPeople, in: 1...16)
+                    Stepper("^[\(numPeople) person](inflect: true)", value: $numPeople, in: numPeopleRange)
                 }
                 
                 Section("Difficulty") {
@@ -100,7 +99,7 @@ struct AddRecipeView: View {
                 
                 Section("Steps") {
                     ForEach(Array($steps.enumerated()), id: \.element.id) { index, $step in
-                        StepCard(step: $step, order: index + 1, editingDisabled: false)
+                        StepCard(step: $step, order: index + 1)
                     }
                     .onDelete(perform: deleteStep)
                     Button("Add step", systemImage: "plus", action: addStep)
@@ -152,6 +151,8 @@ struct AddRecipeView: View {
             }
             .navigationTitle("New recipe")
             .toolbar {
+                ToolbarItem(placement: .principal) { EmptyView() }
+
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Save", action: saveRecipe)
                         .buttonStyle(.borderedProminent)
@@ -169,7 +170,6 @@ struct AddRecipeView: View {
                     }
                 }
             }
-            
         }
     }
     

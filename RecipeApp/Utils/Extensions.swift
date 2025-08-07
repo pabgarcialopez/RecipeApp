@@ -18,7 +18,7 @@ extension Color {
         return Color(hue: hue, saturation: saturation, brightness: brightness)
     }
 }
-// ------------------------------------------------------------------
+
 
 // --------- Allow easy programatic navigation between tabs ---------
 struct SelectedTabKey: EnvironmentKey {
@@ -31,7 +31,7 @@ extension EnvironmentValues {
         set { self[SelectedTabKey.self] = newValue }
     }
 }
-// ------------------------------------------------------------------
+
 
 // --------- Hide keyboard functionality ----------------------------
 
@@ -43,4 +43,14 @@ func hideKeyboard() {
     UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
 }
 #endif
-// ------------------------------------------------------------------
+
+
+// ----- Made to simpligy some Doubles like 20.00 to just 20 --------
+extension Double {
+    var cleanAmount: String {
+        self.truncatingRemainder(dividingBy: 1) == 0
+            ? String(Int(self))
+            : String(format: "%.2f", self)
+    }
+}
+

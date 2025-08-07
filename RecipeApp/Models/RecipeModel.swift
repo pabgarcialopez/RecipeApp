@@ -74,7 +74,7 @@ class RecipeModel: Identifiable, Hashable {
 extension RecipeModel {
     static let sampleRecipes: [RecipeModel] = {
         let taco = RecipeModel(
-            name: "Tacos with a lot lot lot lot lot of cheese",
+            name: "Tacos with a lot lot of cheese",
             details: "Crispy corn tacos filled with a deliciously seasoned blend of ground beef, fresh vegetables, and melted cheese, topped with a tangy salsa and a dollop of sour cream. Perfect for a festive dinner or a casual weeknight meal, these tacos are packed with flavor and guaranteed to satisfy your cravings.",
             cost: Cost.intermediate,
             time: 30,

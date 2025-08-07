@@ -7,4 +7,7 @@
 
 import Foundation
 
-let defaultRecipeCover = "defaultRecipeCover"
+let defaultRecipeCover: String = "defaultRecipeCover"
+
+let defaultNumPeople: Int = 4
+let numPeopleRange: ClosedRange<Int> = 1...16
