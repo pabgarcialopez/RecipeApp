@@ -32,3 +32,15 @@ extension EnvironmentValues {
     }
 }
 // ------------------------------------------------------------------
+
+// --------- Hide keyboard functionality ----------------------------
+
+#if canImport(UIKit)
+import UIKit
+
+/// Global function to dismiss the keyboard
+func hideKeyboard() {
+    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+}
+#endif
+// ------------------------------------------------------------------

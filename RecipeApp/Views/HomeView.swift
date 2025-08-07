@@ -9,7 +9,7 @@ import SwiftUI
 
 struct HomeView: View {
     
-    let recipes: [Recipe]
+    let recipes: [RecipeModel]
     
     var body: some View {
         NavigationStack {
@@ -26,7 +26,7 @@ struct HomeView: View {
                 .padding(.bottom, 25)
             }
             .navigationTitle("My recipes")
-            .navigationDestination(for: Recipe.self) { recipe in
+            .navigationDestination(for: RecipeModel.self) { recipe in
                 RecipeDetailView(recipe: recipe)
             }
         }
@@ -35,5 +35,5 @@ struct HomeView: View {
 }
 
 #Preview {
-    HomeView(recipes: Recipe.sampleRecipes)
+    HomeView(recipes: RecipeModel.sampleRecipes)
 }

@@ -6,20 +6,22 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ContentView: View {
     
-    @State private var recipes = Recipe.sampleRecipes
     @State private var selectedTab = 0
+    @Query private var recipes: [RecipeModel]
+
     
     var body: some View {
-        
+                
         TabView(selection: $selectedTab) {
             HomeView(recipes: recipes)
                 .tabItem { Label("Home", systemImage: "house") }
                 .tag(0)
 
-            AddRecipeView(recipes: $recipes)
+            AddRecipeView()
                 .tabItem { Label("New", systemImage: "plus") }
                 .tag(1)
 

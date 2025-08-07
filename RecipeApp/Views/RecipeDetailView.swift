@@ -9,7 +9,7 @@ import SwiftUI
 
 struct RecipeDetailView: View {
     
-    let recipe: Recipe
+    let recipe: RecipeModel
     
     var body: some View {
         Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
@@ -17,5 +17,5 @@ struct RecipeDetailView: View {
 }
 
 #Preview {
-    RecipeDetailView(recipe: Recipe.sampleRecipes[0])
+    RecipeDetailView(recipe: RecipeModel.sampleRecipes[0])
 }

@@ -6,15 +6,23 @@
 //
 
 import Foundation
+import SwiftData
 
-struct Ingredient: Hashable, Identifiable {
-    let id = UUID()
+@Model
+class IngredientModel: Hashable, Identifiable {
+    private(set) var id = UUID()
     var name: String?
     var quantity: Double?
     var measure: String?
+    
+    init(name: String? = nil, quantity: Double? = nil, measure: String? = nil) {
+        self.name = name
+        self.quantity = quantity
+        self.measure = measure
+    }
 }
 
-extension Ingredient {
+extension IngredientModel {
     static let ingredients = [
         "Water", "Salt", "Sugar", "Olive oil", "Vegetable oil", "Butter",
         "Flour", "Milk", "Eggs", "Onion", "Garlic", "Tomato", "Potato", "Rice",

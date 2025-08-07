@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		5BC86A4E2E43EAC800DE0879 /* AddRecipeTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC86A4D2E43EAC800DE0879 /* AddRecipeTestView.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		5BCCF1472E3A976A00DEC853 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -23,7 +27,21 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		5BE418BA2E43B78000102923 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		5BC86A4D2E43EAC800DE0879 /* AddRecipeTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddRecipeTestView.swift; sourceTree = "<group>"; };
 		5BCCF1392E3A976700DEC853 /* RecipeApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RecipeApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5BCCF1462E3A976A00DEC853 /* RecipeAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RecipeAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5BCCF1502E3A976A00DEC853 /* RecipeAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RecipeAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -75,6 +93,7 @@
 		5BCCF1302E3A976700DEC853 = {
 			isa = PBXGroup;
 			children = (
+				5BC86A4D2E43EAC800DE0879 /* AddRecipeTestView.swift */,
 				5BCCF13B2E3A976700DEC853 /* RecipeApp */,
 				5BCCF1492E3A976A00DEC853 /* RecipeAppTests */,
 				5BCCF1532E3A976A00DEC853 /* RecipeAppUITests */,
@@ -102,6 +121,7 @@
 				5BCCF1352E3A976700DEC853 /* Sources */,
 				5BCCF1362E3A976700DEC853 /* Frameworks */,
 				5BCCF1372E3A976700DEC853 /* Resources */,
+				5BE418BA2E43B78000102923 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -195,6 +215,8 @@
 			);
 			mainGroup = 5BCCF1302E3A976700DEC853;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 5BCCF13A2E3A976700DEC853 /* Products */;
 			projectDirPath = "";
@@ -236,6 +258,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5BC86A4E2E43EAC800DE0879 /* AddRecipeTestView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

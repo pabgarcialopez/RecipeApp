@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 struct IngredientCard: View {
-    let ingredient: Ingredient
+    let ingredient: IngredientModel
     
     var body: some View {
         VStack {
@@ -29,5 +29,5 @@ struct IngredientCard: View {
 }
 
 #Preview {
-    IngredientCard(ingredient: Ingredient(name: "Salt", quantity: 20, measure: "gram"))
+    IngredientCard(ingredient: IngredientModel(name: "Salt", quantity: 20, measure: "gram"))
 }

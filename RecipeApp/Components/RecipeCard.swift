@@ -10,7 +10,7 @@ import SwiftUI
 
 struct RecipeCard: View {
     
-    let recipe: Recipe
+    let recipe: RecipeModel
     
     let default_img = "RecipeCard_default"
     
@@ -47,11 +47,22 @@ struct RecipeCard: View {
         )
     }
     
-    var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            Image(recipe.imageName ?? default_img)
+    var recipeImage: some View {
+        if let data = recipe.photo?.data,
+           let uiImage = UIImage(data: data) {
+            return Image(uiImage: uiImage)
                 .resizable()
                 .scaledToFill()
+        } else {
+            return Image("RecipeCard_default")
+                .resizable()
+                .scaledToFill()
+        }
+    }
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            recipeImage
                 .frame(height: 180)
                 .clipped()
                 .overlay(

@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 struct StepCard: View {
-    @Binding var step: Step
+    @Binding var step: StepModel
     
     let order: Int
     
@@ -42,11 +42,16 @@ struct StepCard: View {
         .padding([.top, .bottom], 8)
         .background(editingDisabled ? powderBlueColor : Color.clear)
         .clipShape(RoundedRectangle(cornerRadius: 15))
+//        .toolbar {
+//            ToolbarItem(placement: .keyboard) {
+//                Button("Done", action: hideKeyboard)
+//            }
+//        }
     }
 }
 
 
 #Preview {
-    @Previewable @State var previewStep = Step(title: "Step X", instruction: "Blablablablablabla")
+    @Previewable @State var previewStep = StepModel(title: "Step X", instruction: "Blablablablablabla")
     StepCard(step: $previewStep, order: 5, editingDisabled: false)
 }
