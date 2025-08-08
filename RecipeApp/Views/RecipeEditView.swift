@@ -8,22 +8,23 @@
 import SwiftUI
 import PhotosUI
 
-struct AddRecipeView: View {
+struct RecipeEditView: View {
     
     private enum Field: Int, CaseIterable {
         case name, details, time
     }
     
-    @Environment(\.selectedTab) var selectedTab
+    @Environment(\.dismiss) var dismiss
     @Environment(\.modelContext) private var modelContext
 
     // Main variables
-    @State private var name = ""
-    @State private var details = ""
-    @State private var time: Int? = nil
-    @State private var cost: Cost = .cheap
-    @State private var difficulty: Difficulty = .easy
-    @State private var numPeople = defaultNumPeople
+    @State var existingRecipe: RecipeModel? = nil
+    @State private var name = DEFAULT_RECIPE_NAME
+    @State private var details = DEFAULT_RECIPE_DETAILS
+    @State private var time: Int? = DEFAULT_RECIPE_TIME
+    @State private var cost: Cost = DEFAULT_RECIPE_COST
+    @State private var difficulty: Difficulty = DEFAULT_RECIPE_DIFFICULTY
+    @State private var numPeople = DEFAULT_RECIPE_NUM_PEOPLE
     @State private var steps = [StepModel]()
     @State private var ingredients = [IngredientModel]()
     @State private var imageData: Data? = nil
@@ -34,6 +35,26 @@ struct AddRecipeView: View {
     // Other useful general variables
     let allIngredients = ["None"] + INGREDIENTS
     let allMeasurements = ["None"] + MEASUREMENTS
+    
+    // Allows editing existing recipes
+    init(existingRecipe: RecipeModel? = nil) {
+        self.existingRecipe = existingRecipe
+        
+        // If editing, initialize @State vars with recipe data
+        if let recipe = existingRecipe {
+            _name = State(initialValue: recipe.name)
+            _details = State(initialValue: recipe.details)
+            _time = State(initialValue: recipe.time)
+            _cost = State(initialValue: recipe.cost)
+            _difficulty = State(initialValue: recipe.difficulty)
+            _numPeople = State(initialValue: recipe.numPeople)
+            _steps = State(initialValue: Array(recipe.steps))
+            _ingredients = State(initialValue: Array(recipe.ingredients))
+            if let imageModel = recipe.imageModel {
+                _imageData = State(initialValue: imageModel.data)
+            }
+        }
+    }
     
     var body: some View {
         NavigationStack {
@@ -76,7 +97,7 @@ struct AddRecipeView: View {
                 }
                 
                 Section("Number of people") {
-                    Stepper("^[\(numPeople) person](inflect: true)", value: $numPeople, in: numPeopleRange)
+                    Stepper("^[\(numPeople) person](inflect: true)", value: $numPeople, in: DEFAULT_RECIPE_NUM_PEOPLE_RANGE)
                 }
                 
                 Section("Difficulty") {
@@ -143,7 +164,7 @@ struct AddRecipeView: View {
                                         Text(unit).tag(Optional(unit))
                                     }
                                 }
-                                .fixedSize()
+                                .fixedSize() // To make the Picker not expand
                                 
                             }
                         }
@@ -195,29 +216,59 @@ struct AddRecipeView: View {
     func saveRecipe() {
         guard let time = time else { return }
         
-        let recipe = RecipeModel(name: name, details: details, cost: cost, time: time, difficulty: difficulty, numPeople: numPeople)
-
+        let recipeToSave = existingRecipe ?? RecipeModel(name: name, details: details, cost: cost, time: time, difficulty: difficulty, numPeople: numPeople)
+        
+        // Update fields
+        recipeToSave.name = name
+        recipeToSave.details = details
+        recipeToSave.time = time
+        recipeToSave.cost = cost
+        recipeToSave.difficulty = difficulty
+        recipeToSave.numPeople = numPeople
+        
+        // Replace steps and ingredients
+        recipeToSave.steps = []
         for step in steps {
-            recipe.steps.append(StepModel(title: step.title, instruction: step.instruction))
+            recipeToSave.steps.append(StepModel(title: step.title, instruction: step.instruction))
         }
+        
+        recipeToSave.ingredients = []
         for ing in ingredients {
-            recipe.ingredients.append(IngredientModel(name: ing.name, quantity: ing.quantity, measure: ing.measure))
+            recipeToSave.ingredients.append(IngredientModel(name: ing.name, quantity: ing.quantity, measure: ing.measure))
         }
         
         if let data = imageData {
-            let imageModel = ImageModel(data: data)
-            modelContext.insert(imageModel)
-            recipe.imageModel = imageModel
+            if let existingImageModel = recipeToSave.imageModel {
+                existingImageModel.data = data
+            } else {
+                let imageModel = ImageModel(data: data)
+                modelContext.insert(imageModel)
+                recipeToSave.imageModel = imageModel
+            }
+        } else {
+            // Optionally delete the image if user removed it
+            if let existingImageModel = recipeToSave.imageModel {
+                modelContext.delete(existingImageModel)
+                recipeToSave.imageModel = nil
+            }
         }
-            
-        modelContext.insert(recipe)
         
-        // Programatically travel to Home
-        selectedTab?.wrappedValue = 0
+        // New recipe (not existing one)
+        if existingRecipe == nil {
+            modelContext.insert(recipeToSave)
+        }
         
-        // To make the fields empty for next recipe.
+        do {
+            try modelContext.save()
+        } catch {
+            print("Failed to save recipe: \(error)")
+        }
+        
+        // Navigate back and reset values.
+        dismiss()
         resetData()
     }
+
     
     func saveRecipeDisable() -> Bool {
         let someIngredientHasName = ingredients.contains(where: { ingredient in
@@ -246,23 +297,25 @@ struct AddRecipeView: View {
     }
     
     func resetData() {
-        name = ""
-        details = ""
-        time = nil
-        cost = .cheap
-        difficulty = .easy
-        numPeople = 4
-        steps = [StepModel]()
-        ingredients = [IngredientModel]()
-        selectedPic = nil
-        imageData = nil
+        if existingRecipe == nil {
+            name = DEFAULT_RECIPE_NAME
+            details = DEFAULT_RECIPE_DETAILS
+            time = DEFAULT_RECIPE_TIME
+            cost = DEFAULT_RECIPE_COST
+            difficulty = DEFAULT_RECIPE_DIFFICULTY
+            numPeople = DEFAULT_RECIPE_NUM_PEOPLE
+            steps = []
+            ingredients = []
+            selectedPic = nil
+            imageData = nil
+        }
     }
 }
 
 
 
 #Preview {
-    AddRecipeView()
+    RecipeEditView()
         .modelContainer(for: [
             RecipeModel.self,
             IngredientModel.self,

@@ -12,7 +12,6 @@ struct StepCard: View {
     
     let order: Int
     let editingDisabled: Bool
-    let powderBlueColor = Color(red: 0.80, green: 0.90, blue: 1.0)
 
     // Initializer for binding (editable mode)
     init(step: Binding<StepModel>, order: Int) {
@@ -55,7 +54,7 @@ struct StepCard: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding()
-        .background(editingDisabled ? powderBlueColor : Color.clear)
+        .background(editingDisabled ? .cyan.opacity(0.2) : Color.clear)
         .clipShape(RoundedRectangle(cornerRadius: 15))
     }
 }

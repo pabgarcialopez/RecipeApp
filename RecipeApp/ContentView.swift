@@ -12,8 +12,6 @@ struct ContentView: View {
     
     @State private var selectedTab = 0
     
-
-    
     var body: some View {
                 
         TabView(selection: $selectedTab) {
@@ -21,13 +19,9 @@ struct ContentView: View {
                 .tabItem { Label("Home", systemImage: "house") }
                 .tag(0)
 
-            AddRecipeView()
-                .tabItem { Label("New recipe", systemImage: "plus") }
-                .tag(1)
-
             ProfileView()
                 .tabItem { Label("Profile", systemImage: "person.crop.circle") }
-                .tag(2)
+                .tag(1)
         }
         .environment(\.selectedTab, $selectedTab)
         

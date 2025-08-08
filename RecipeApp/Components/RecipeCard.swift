@@ -52,7 +52,7 @@ struct RecipeCard: View {
                 .resizable()
                 .scaledToFill()
         } else {
-            return Image(defaultRecipeCover)
+            return Image(DEFAULT_RECIPE_COVER)
                 .resizable()
                 .scaledToFill()
         }

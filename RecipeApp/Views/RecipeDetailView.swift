@@ -14,6 +14,7 @@ struct RecipeDetailView: View {
     @Environment(\.dismiss) private var dismiss
     
     let recipe: RecipeModel
+    var onDelete: (() -> Void)?
 
     @State private var newNumPeople: Int
     @State private var deleteAlertShowing: Bool
@@ -21,8 +22,9 @@ struct RecipeDetailView: View {
     var sharingURL: String { return "\(recipe.name)" }
     var multiplier: Double { Double(newNumPeople) / Double(recipe.numPeople) }
     
-    init(recipe: RecipeModel) {
+    init(recipe: RecipeModel, onDelete: (() -> Void)? = nil) {
         self.recipe = recipe
+        self.onDelete = onDelete
         _newNumPeople = State(initialValue: recipe.numPeople) // To avoid error about property initializer
         _deleteAlertShowing = State(initialValue: false)
     }
@@ -34,7 +36,7 @@ struct RecipeDetailView: View {
                     
                     // Recipe photo, name and details
                     VStack(alignment: .leading) {
-                        (recipe.imageModel?.image ?? Image(defaultRecipeCover))
+                        (recipe.imageModel?.image ?? Image(DEFAULT_RECIPE_COVER))
                             .resizable()
                             .scaledToFit()
                             .clipShape(RoundedRectangle(cornerRadius: 15))
@@ -71,7 +73,7 @@ struct RecipeDetailView: View {
                                 
                                 Spacer()
                                                                 
-                                Stepper(value: $newNumPeople, in: numPeopleRange) {
+                                Stepper(value: $newNumPeople, in: DEFAULT_RECIPE_NUM_PEOPLE_RANGE) {
                                     Text("^[\(newNumPeople) person](inflect: true)")
                                 }
                                 .fixedSize()
@@ -84,7 +86,7 @@ struct RecipeDetailView: View {
                         .padding(.top)
                         
                         // Steps
-                        VStack(alignment: .leading, spacing: 8) {
+                        VStack(alignment: .leading, spacing: 15) {
                             Text("Steps")
                                 .font(.title3).bold()
                                 .padding(.top)
@@ -130,7 +132,7 @@ struct RecipeDetailView: View {
     }
     
     func deleteRecipe() {
-        dismiss() // Go back to HomeView()
+        dismiss()
         modelContext.delete(recipe)
         do {
             try modelContext.save()
@@ -138,6 +140,39 @@ struct RecipeDetailView: View {
             print("Failed to delete recipe: \(error)")
         }
     }
+    
+//    private func deleteRecipe() {
+//        // Use custom onDelete if provided, otherwise default to this logic
+//        if onDelete == nil {
+//            // Default deletion logic
+//            modelContext.delete(recipe)
+//            try? modelContext.save()
+//            dismiss()
+//        } else {
+//            onDelete!()
+//        }
+//    }
+    
+//    Works
+//    func deleteRecipe() {
+//        let recipeToDelete = recipe
+//        dismiss()
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+//            modelContext.delete(recipeToDelete)
+//            try? modelContext.save()
+//        }
+//    }
+    
+//    func deleteRecipe() {
+//        let recipeToDelete = recipe
+//        dismiss()
+//        do {
+//            modelContext.delete(recipeToDelete)
+//            try modelContext.save()
+//        } catch {
+//            print("Failed to delete recipe: \(error)")
+//        }
+//    }
     
     func specificsBox(systemName: String, text: Text) -> some View {
         HStack(spacing: 6) {

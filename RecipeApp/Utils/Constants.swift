@@ -7,10 +7,16 @@
 
 import Foundation
 
-let defaultRecipeCover: String = "defaultRecipeCover"
+// Recipe defaults
 
-let defaultNumPeople: Int = 4
-let numPeopleRange: ClosedRange<Int> = 1...16
+let DEFAULT_RECIPE_NAME = ""
+let DEFAULT_RECIPE_DETAILS = ""
+let DEFAULT_RECIPE_TIME: Int? = nil
+let DEFAULT_RECIPE_COST = Cost.cheap
+let DEFAULT_RECIPE_DIFFICULTY = Difficulty.easy
+let DEFAULT_RECIPE_NUM_PEOPLE = 4
+let DEFAULT_RECIPE_NUM_PEOPLE_RANGE = 1...16
+let DEFAULT_RECIPE_COVER = "defaultRecipeCover"
 
 let INGREDIENTS = [
     "Water", "Salt", "Sugar", "Olive oil", "Vegetable oil", "Butter",
@@ -30,3 +36,6 @@ let MEASUREMENTS = [
     "milliliter", "liter", "gram", "kilogram", "ounce", "pound",
     "pinch", "dash", "smidgen", "drop"
 ].sorted()
+
+
+
