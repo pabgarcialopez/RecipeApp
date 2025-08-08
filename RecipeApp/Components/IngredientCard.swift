@@ -28,30 +28,25 @@ struct IngredientCard: View {
 }
 
 private extension IngredientCard {
-    /// Generates a scaled and human-friendly quantity text, handling unit conversion.
-    /// Uses numeric interpolation + FormatStyle so SwiftUI can pluralize unit.
+    
     var scaledQuantityText: Text {
         guard let qty = ingredient.quantity,
               let unit = ingredient.measure else {
             return Text("?")
         }
 
-        let scaledValue = qty * multiplier
-        let (convertedValue, convertedUnit) = scaledQuantity(scaledValue, unit: unit)
+        let (convertedValue, convertedUnit) = convertValueAndUnit(qty * multiplier, unit: unit)
 
+        // If dividing by 1 gives remainder of 0, it means convertedValue is really an Int
         if convertedValue.truncatingRemainder(dividingBy: 1) == 0 {
-            // Whole number: pass as Int
             let intValue = Int(convertedValue)
             return Text("^[\(intValue) \(convertedUnit)](inflect: true)")
-        } else {
-            // Fractional: pass as Double
+        } else { // Otherwise, it contains significant decimals
             return Text("^[\(convertedValue, specifier: "%.2f") \(convertedUnit)](inflect: true)")
         }
     }
 
-    /// Converts quantities into more readable units (e.g., 1200 g -> 1.2 kg).
-    /// Always returns singular unit names — SwiftUI will pluralize automatically.
-    func scaledQuantity(_ value: Double, unit: String) -> (Double, String) {
+    func convertValueAndUnit(_ value: Double, unit: String) -> (Double, String) {
         switch unit.lowercased() {
         case "gram", "grams":
             return value >= 1000 ? (value / 1000, "kilogram") : (value, "gram")
@@ -69,7 +64,9 @@ private extension IngredientCard {
         default:
             // Return a cleaned singular form by default if caller passed a plural
             let lower = unit.lowercased()
-            if lower.hasSuffix("s") && lower.count > 1 { return (value, String(lower.dropLast())) }
+            if lower.hasSuffix("s") && lower.count > 1 {
+                return (value, String(lower.dropLast()))
+            }
             return (value, lower)
         }
     }

@@ -131,6 +131,8 @@ struct AddRecipeView: View {
                                         .keyboardType(.decimalPad)
                                 }
                                 
+                                Spacer()
+                                
                                 // Measurement picker
                                 Picker("Unit", selection: Binding(
                                     get: { ingredient.measure },
@@ -141,6 +143,7 @@ struct AddRecipeView: View {
                                         Text(unit).tag(Optional(unit))
                                     }
                                 }
+                                .fixedSize()
                                 
                             }
                         }

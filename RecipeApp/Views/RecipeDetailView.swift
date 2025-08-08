@@ -58,6 +58,10 @@ struct RecipeDetailView: View {
                         Text(recipe.details)
                             .font(.system(size: 18))
                         
+                        Divider()
+                            .overlay(.cyan)
+                            .padding(.top, 10)
+                        
                         // Ingredients
                         VStack(alignment: .leading, spacing: 8) {
                             
