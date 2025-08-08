@@ -18,10 +18,10 @@ struct RecipeEditView: View {
     @Environment(\.modelContext) private var modelContext
 
     // Main variables
-    @State var existingRecipe: RecipeModel? = nil
+    @Bindable var recipe: RecipeModel
     @State private var name = DEFAULT_RECIPE_NAME
     @State private var details = DEFAULT_RECIPE_DETAILS
-    @State private var time: Int? = DEFAULT_RECIPE_TIME
+    @State private var time: Int = DEFAULT_RECIPE_TIME
     @State private var cost: Cost = DEFAULT_RECIPE_COST
     @State private var difficulty: Difficulty = DEFAULT_RECIPE_DIFFICULTY
     @State private var numPeople = DEFAULT_RECIPE_NUM_PEOPLE
@@ -36,23 +36,31 @@ struct RecipeEditView: View {
     let allIngredients = ["None"] + INGREDIENTS
     let allMeasurements = ["None"] + MEASUREMENTS
     
-    // Allows editing existing recipes
-    init(existingRecipe: RecipeModel? = nil) {
-        self.existingRecipe = existingRecipe
-        
-        // If editing, initialize @State vars with recipe data
-        if let recipe = existingRecipe {
-            _name = State(initialValue: recipe.name)
-            _details = State(initialValue: recipe.details)
-            _time = State(initialValue: recipe.time)
-            _cost = State(initialValue: recipe.cost)
-            _difficulty = State(initialValue: recipe.difficulty)
-            _numPeople = State(initialValue: recipe.numPeople)
-            _steps = State(initialValue: Array(recipe.steps))
-            _ingredients = State(initialValue: Array(recipe.ingredients))
-            if let imageModel = recipe.imageModel {
-                _imageData = State(initialValue: imageModel.data)
-            }
+    init() {
+        // Create a new blank recipe
+        let newRecipe = RecipeModel(
+            name: DEFAULT_RECIPE_NAME,
+            details: DEFAULT_RECIPE_DETAILS,
+            cost: DEFAULT_RECIPE_COST,
+            time: DEFAULT_RECIPE_TIME,
+            difficulty: DEFAULT_RECIPE_DIFFICULTY,
+            numPeople: DEFAULT_RECIPE_NUM_PEOPLE
+        )
+        self.recipe = newRecipe
+    }
+
+    init(recipe: RecipeModel) {
+        self.recipe = recipe
+        _name = State(initialValue: recipe.name)
+        _details = State(initialValue: recipe.details)
+        _time = State(initialValue: recipe.time)
+        _cost = State(initialValue: recipe.cost)
+        _difficulty = State(initialValue: recipe.difficulty)
+        _numPeople = State(initialValue: recipe.numPeople)
+        _steps = State(initialValue: Array(recipe.steps))
+        _ingredients = State(initialValue: Array(recipe.ingredients))
+        if let imageModel = recipe.imageModel {
+            _imageData = State(initialValue: imageModel.data)
         }
     }
     
@@ -92,7 +100,7 @@ struct RecipeEditView: View {
                 }
                 
                 Section("Time (minutes)") {
-                    TextField("20", value: $time, formatter: NumberFormatter())
+                    TextField("\(time)", value: $time, formatter: NumberFormatter())
                         .keyboardType(.numberPad)
                 }
                 
@@ -214,48 +222,40 @@ struct RecipeEditView: View {
     }
     
     func saveRecipe() {
-        guard let time = time else { return }
-        
-        let recipeToSave = existingRecipe ?? RecipeModel(name: name, details: details, cost: cost, time: time, difficulty: difficulty, numPeople: numPeople)
         
         // Update fields
-        recipeToSave.name = name
-        recipeToSave.details = details
-        recipeToSave.time = time
-        recipeToSave.cost = cost
-        recipeToSave.difficulty = difficulty
-        recipeToSave.numPeople = numPeople
+        recipe.name = name
+        recipe.details = details
+        recipe.time = time
+        recipe.cost = cost
+        recipe.difficulty = difficulty
+        recipe.numPeople = numPeople
         
         // Replace steps and ingredients
-        recipeToSave.steps = []
+        recipe.steps = []
         for step in steps {
-            recipeToSave.steps.append(StepModel(title: step.title, instruction: step.instruction))
+            recipe.steps.append(StepModel(title: step.title, instruction: step.instruction))
         }
         
-        recipeToSave.ingredients = []
+        recipe.ingredients = []
         for ing in ingredients {
-            recipeToSave.ingredients.append(IngredientModel(name: ing.name, quantity: ing.quantity, measure: ing.measure))
+            recipe.ingredients.append(IngredientModel(name: ing.name, quantity: ing.quantity, measure: ing.measure))
         }
         
         if let data = imageData {
-            if let existingImageModel = recipeToSave.imageModel {
-                existingImageModel.data = data
+            if let imageModel = recipe.imageModel {
+                imageModel.data = data
             } else {
                 let imageModel = ImageModel(data: data)
                 modelContext.insert(imageModel)
-                recipeToSave.imageModel = imageModel
+                recipe.imageModel = imageModel
             }
         } else {
             // Optionally delete the image if user removed it
-            if let existingImageModel = recipeToSave.imageModel {
-                modelContext.delete(existingImageModel)
-                recipeToSave.imageModel = nil
+            if let imageModel = recipe.imageModel {
+                modelContext.delete(imageModel)
+                recipe.imageModel = nil
             }
-        }
-        
-        // New recipe (not existing one)
-        if existingRecipe == nil {
-            modelContext.insert(recipeToSave)
         }
         
         do {
@@ -280,7 +280,7 @@ struct RecipeEditView: View {
             step.title != ""
         })
         
-        return name.isEmpty || time == nil || !someIngredientHasName || !someStepHasTitle
+        return name.isEmpty || !someIngredientHasName || !someStepHasTitle
     }
     
     func loadImage(from item: PhotosPickerItem?) {
@@ -299,18 +299,16 @@ struct RecipeEditView: View {
     }
     
     func resetData() {
-        if existingRecipe == nil {
-            name = DEFAULT_RECIPE_NAME
-            details = DEFAULT_RECIPE_DETAILS
-            time = DEFAULT_RECIPE_TIME
-            cost = DEFAULT_RECIPE_COST
-            difficulty = DEFAULT_RECIPE_DIFFICULTY
-            numPeople = DEFAULT_RECIPE_NUM_PEOPLE
-            steps = []
-            ingredients = []
-            selectedPic = nil
-            imageData = nil
-        }
+        name = DEFAULT_RECIPE_NAME
+        details = DEFAULT_RECIPE_DETAILS
+        time = DEFAULT_RECIPE_TIME
+        cost = DEFAULT_RECIPE_COST
+        difficulty = DEFAULT_RECIPE_DIFFICULTY
+        numPeople = DEFAULT_RECIPE_NUM_PEOPLE
+        steps = []
+        ingredients = []
+        selectedPic = nil
+        imageData = nil
     }
 }
 

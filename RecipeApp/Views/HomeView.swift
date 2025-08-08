@@ -9,6 +9,9 @@ import SwiftUI
 import SwiftData
 
 struct HomeView: View {
+    
+    @Environment(\.modelContext) var modelContext
+    
     @Query private var recipes: [RecipeModel]
     @State private var showNewRecipeSheet: Bool = false
     
@@ -43,6 +46,7 @@ struct HomeView: View {
             }
             .sheet(isPresented: $showNewRecipeSheet) {
                 RecipeEditView()
+                
             }
         }
     }

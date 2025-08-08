@@ -13,10 +13,10 @@ struct RecipeDetailView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     
-    let recipe: RecipeModel
-
+    @Bindable var recipe: RecipeModel
     @State private var newNumPeople: Int
     @State private var deleteAlertShowing: Bool
+    @State private var showEditRecipeSheet: Bool
     
     var sharingURL: String { return "\(recipe.name)" }
     var multiplier: Double { Double(newNumPeople) / Double(recipe.numPeople) }
@@ -25,6 +25,7 @@ struct RecipeDetailView: View {
         self.recipe = recipe
         _newNumPeople = State(initialValue: recipe.numPeople) // To avoid error about property initializer
         _deleteAlertShowing = State(initialValue: false)
+        _showEditRecipeSheet = State(initialValue: false)
     }
 
     var body: some View {
@@ -97,10 +98,13 @@ struct RecipeDetailView: View {
                 }
                 .padding()
             }
-            .alert("Delete recipe", isPresented: $deleteAlertShowing, actions: {
+            .alert("Sure to delete this recipe?", isPresented: $deleteAlertShowing, actions: {
                 Button("Cancel", role: .cancel) {}
                 Button("Delete", role: .destructive, action: deleteRecipe)
             }, message: { Text("You won't be able to get it back!") })
+            .sheet(isPresented: $showEditRecipeSheet) {
+                RecipeEditView(recipe: recipe)
+            }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Menu {
@@ -122,7 +126,7 @@ struct RecipeDetailView: View {
     }
     
     func editRecipe() {
-        
+        showEditRecipeSheet = true
     }
     
     func toggleDeletionAlert() {

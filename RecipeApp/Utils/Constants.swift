@@ -11,7 +11,7 @@ import Foundation
 
 let DEFAULT_RECIPE_NAME = ""
 let DEFAULT_RECIPE_DETAILS = ""
-let DEFAULT_RECIPE_TIME: Int? = nil
+let DEFAULT_RECIPE_TIME: Int = 25
 let DEFAULT_RECIPE_COST = Cost.cheap
 let DEFAULT_RECIPE_DIFFICULTY = Difficulty.easy
 let DEFAULT_RECIPE_NUM_PEOPLE = 4
