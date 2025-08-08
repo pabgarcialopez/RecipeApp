@@ -266,9 +266,10 @@ struct RecipeEditView: View {
         
         // Navigate back and reset values.
         dismiss()
-        resetData()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            resetData()
+        }
     }
-
     
     func saveRecipeDisable() -> Bool {
         let someIngredientHasName = ingredients.contains(where: { ingredient in
@@ -293,7 +294,8 @@ struct RecipeEditView: View {
     }
     
     func deleteCurrentPicture() {
-       selectedPic = nil
+        selectedPic = nil
+        imageData = nil
     }
     
     func resetData() {

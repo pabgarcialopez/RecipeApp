@@ -15,7 +15,7 @@ struct RecipeCard: View {
     var shadowColor: Color {
         switch recipe.difficulty {
             case .easy: .green
-            case .intermediate: .orange
+            case .medium: .orange
             case .hard: .red
         }
     }

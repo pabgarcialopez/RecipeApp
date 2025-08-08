@@ -14,7 +14,6 @@ struct RecipeDetailView: View {
     @Environment(\.dismiss) private var dismiss
     
     let recipe: RecipeModel
-    var onDelete: (() -> Void)?
 
     @State private var newNumPeople: Int
     @State private var deleteAlertShowing: Bool
@@ -22,9 +21,8 @@ struct RecipeDetailView: View {
     var sharingURL: String { return "\(recipe.name)" }
     var multiplier: Double { Double(newNumPeople) / Double(recipe.numPeople) }
     
-    init(recipe: RecipeModel, onDelete: (() -> Void)? = nil) {
+    init(recipe: RecipeModel) {
         self.recipe = recipe
-        self.onDelete = onDelete
         _newNumPeople = State(initialValue: recipe.numPeople) // To avoid error about property initializer
         _deleteAlertShowing = State(initialValue: false)
     }
@@ -131,48 +129,24 @@ struct RecipeDetailView: View {
         deleteAlertShowing = true
     }
     
-    func deleteRecipe() {
-        dismiss()
-        modelContext.delete(recipe)
-        do {
-            try modelContext.save()
-        } catch {
-            print("Failed to delete recipe: \(error)")
-        }
-    }
-    
-//    private func deleteRecipe() {
-//        // Use custom onDelete if provided, otherwise default to this logic
-//        if onDelete == nil {
-//            // Default deletion logic
-//            modelContext.delete(recipe)
-//            try? modelContext.save()
-//            dismiss()
-//        } else {
-//            onDelete!()
-//        }
-//    }
-    
-//    Works
 //    func deleteRecipe() {
-//        let recipeToDelete = recipe
 //        dismiss()
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-//            modelContext.delete(recipeToDelete)
-//            try? modelContext.save()
-//        }
-//    }
-    
-//    func deleteRecipe() {
-//        let recipeToDelete = recipe
-//        dismiss()
+//        modelContext.delete(recipe)
 //        do {
-//            modelContext.delete(recipeToDelete)
 //            try modelContext.save()
 //        } catch {
 //            print("Failed to delete recipe: \(error)")
 //        }
 //    }
+    
+    func deleteRecipe() {
+        let recipeToDelete = recipe
+        modelContext.delete(recipeToDelete)
+        try? modelContext.save()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            dismiss()
+        }
+    }
     
     func specificsBox(systemName: String, text: Text) -> some View {
         HStack(spacing: 6) {

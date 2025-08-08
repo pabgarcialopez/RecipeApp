@@ -14,22 +14,26 @@ struct HomeView: View {
     
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(alignment: .center, spacing: 30) {
-                    ForEach(recipes, id: \.id) { recipe in
-                        NavigationLink {
-                            RecipeDetailView(recipe: recipe) {
-                                modelContext.delete(recipe)
-                                try? modelContext.save()
+            Group {
+                if recipes.isEmpty {
+                    ContentUnavailableView("No recipes yet", systemImage: "carrot", description: Text("Add some now!"))
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else {
+                    ScrollView {
+                        VStack(alignment: .center, spacing: 30) {
+                            ForEach(recipes, id: \.id) { recipe in
+                                NavigationLink {
+                                    RecipeDetailView(recipe: recipe)
+                                } label: {
+                                    RecipeCard(recipe: recipe)
+                                }
+                                .buttonStyle(.plain)
                             }
-                        } label: {
-                            RecipeCard(recipe: recipe)
                         }
-                        .buttonStyle(.plain)
+                        .padding(.top, 15)
+                        .padding(.bottom, 25)
                     }
                 }
-                .padding(.top, 15)
-                .padding(.bottom, 25)
             }
             .navigationTitle("My recipes")
             .toolbar {

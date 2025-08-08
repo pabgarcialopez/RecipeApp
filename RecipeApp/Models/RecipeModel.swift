@@ -10,12 +10,12 @@ import SwiftUI
 import SwiftData
 
 enum Cost: String, Codable, CaseIterable, Hashable {
-    case cheap = "Cheap", intermediate = "Intermediate", pricy = "Pricy"
+    case cheap = "Cheap", medium = "Medium", pricy = "Pricy"
     
     var symbol: String {
         switch self {
             case .cheap: return "$"
-            case .intermediate: return "$$"
+            case .medium: return "$$"
             case .pricy: return "$$$"
         }
     }
@@ -27,12 +27,12 @@ enum Cost: String, Codable, CaseIterable, Hashable {
 
 
 enum Difficulty: String, Codable, CaseIterable, Hashable {
-    case easy = "Easy", intermediate = "Intermediate", hard = "Hard"
+    case easy = "Easy", medium = "Medium", hard = "Hard"
     
     var color: Color {
         switch self {
             case .easy: return .green
-            case .intermediate: return .orange
+            case .medium: return .orange
             case .hard: return .red
         }
     }
@@ -52,13 +52,13 @@ class RecipeModel: Identifiable, Hashable {
     var difficulty: Difficulty
     var numPeople: Int
 
-    @Relationship(deleteRule: .nullify)
+    @Relationship(deleteRule: .cascade)
     var ingredients: [IngredientModel] = []
 
     @Relationship(deleteRule: .cascade)
     var steps: [StepModel] = []
 
-    @Relationship(deleteRule: .nullify)
+    @Relationship(deleteRule: .cascade)
     var imageModel: ImageModel?
 
     init(name: String, details: String, cost: Cost, time: Int, difficulty: Difficulty, numPeople: Int) {
@@ -76,7 +76,7 @@ extension RecipeModel {
         let taco = RecipeModel(
             name: "Tacos with a lot lot of cheese",
             details: "Crispy corn tacos filled with a deliciously seasoned blend of ground beef, fresh vegetables, and melted cheese, topped with a tangy salsa and a dollop of sour cream. Perfect for a festive dinner or a casual weeknight meal, these tacos are packed with flavor and guaranteed to satisfy your cravings.",
-            cost: Cost.intermediate,
+            cost: Cost.medium,
             time: 30,
             difficulty: Difficulty.easy,
             numPeople: 3
