@@ -15,11 +15,16 @@ struct RecipeDetailView: View {
     
     let recipe: RecipeModel
 
-    @State private var newNumPeople: Int = defaultNumPeople
-    @State private var deleteAlertShowing = false
+    @State private var newNumPeople: Int
+    @State private var deleteAlertShowing: Bool
     
-    var sharingURL: String {
-        return "\(recipe.name)"
+    var sharingURL: String { return "\(recipe.name)" }
+    var multiplier: Double { Double(newNumPeople) / Double(recipe.numPeople) }
+    
+    init(recipe: RecipeModel) {
+        self.recipe = recipe
+        _newNumPeople = State(initialValue: recipe.numPeople) // To avoid error about property initializer
+        _deleteAlertShowing = State(initialValue: false)
     }
 
     var body: some View {
@@ -69,7 +74,7 @@ struct RecipeDetailView: View {
                             }
                             
                             ForEach(recipe.ingredients, id: \.id) { ingredient in
-                                IngredientCard(ingredient: ingredient)
+                                IngredientCard(ingredient: ingredient, multiplier: multiplier)
                             }
                         }
                         .padding(.top)

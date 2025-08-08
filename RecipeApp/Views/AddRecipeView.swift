@@ -32,8 +32,8 @@ struct AddRecipeView: View {
     @State private var selectedPic: PhotosPickerItem?
     
     // Other useful general variables
-    let allIngredients = ["None"] + IngredientModel.ingredients
-    let allMeasurements = ["None"] + IngredientModel.measurements
+    let allIngredients = ["None"] + INGREDIENTS
+    let allMeasurements = ["None"] + MEASUREMENTS
     
     var body: some View {
         NavigationStack {
@@ -115,7 +115,7 @@ struct AddRecipeView: View {
                                 set: { ingredient.name = $0 }
                             )) {
                                 Text("None").tag(Optional<String>.none)
-                                ForEach(IngredientModel.ingredients, id: \.self) { item in
+                                ForEach(INGREDIENTS, id: \.self) { item in
                                     Text(item).tag(Optional(item))
                                 }
                             }
@@ -137,7 +137,7 @@ struct AddRecipeView: View {
                                     set: { ingredient.measure = $0 }
                                 )) {
                                     Text("None").tag(Optional<String>.none)
-                                    ForEach(IngredientModel.measurements, id: \.self) { unit in
+                                    ForEach(MEASUREMENTS, id: \.self) { unit in
                                         Text(unit).tag(Optional(unit))
                                     }
                                 }
