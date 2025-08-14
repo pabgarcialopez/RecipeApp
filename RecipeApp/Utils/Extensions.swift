@@ -7,18 +7,7 @@
 
 import Foundation
 import SwiftUI
-
-// --------- For pastel colors in IngredientCard's. -----------------
-extension Color {
-    static var randomPastel: Color {
-        let hue = Double.random(in: 0...1)
-        let saturation = Double.random(in: 0.4...0.6) // softer tones
-        let brightness = Double.random(in: 0.85...1.0)
-
-        return Color(hue: hue, saturation: saturation, brightness: brightness)
-    }
-}
-
+import UIKit
 
 // --------- Allow easy programatic navigation between tabs ---------
 struct SelectedTabKey: EnvironmentKey {
@@ -32,25 +21,9 @@ extension EnvironmentValues {
     }
 }
 
-
 // --------- Hide keyboard functionality ----------------------------
 
-#if canImport(UIKit)
-import UIKit
-
-/// Global function to dismiss the keyboard
-func hideKeyboard() {
+func hideKeyboard() { // Global function to dismiss the keyboard
     UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-}
-#endif
-
-
-// ----- Made to simpligy some Doubles like 20.00 to just 20 --------
-extension Double {
-    var cleanAmount: String {
-        self.truncatingRemainder(dividingBy: 1) == 0
-            ? String(Int(self))
-            : String(format: "%.2f", self)
-    }
 }
 

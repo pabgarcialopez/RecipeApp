@@ -133,24 +133,22 @@ struct RecipeDetailView: View {
         deleteAlertShowing = true
     }
     
-//    func deleteRecipe() {
-//        dismiss()
-//        modelContext.delete(recipe)
-//        do {
-//            try modelContext.save()
-//        } catch {
-//            print("Failed to delete recipe: \(error)")
-//        }
-//    }
-    
     func deleteRecipe() {
-        let recipeToDelete = recipe
-        modelContext.delete(recipeToDelete)
-        try? modelContext.save()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            dismiss()
+        
+        do {
+            recipe.steps.removeAll()
+            recipe.ingredients.removeAll()
+            recipe.imageModel = nil
+            modelContext.delete(recipe)
+            try modelContext.save()
+            
+        } catch {
+            print("Failed to delete recipe: \(error)")
         }
+        
+        dismiss()
     }
+
     
     func specificsBox(systemName: String, text: Text) -> some View {
         HStack(spacing: 6) {

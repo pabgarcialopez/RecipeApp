@@ -54,6 +54,22 @@ struct HomeView: View {
     func createNewRecipe() {
         showNewRecipeSheet = true
     }
+    
+//    func createNewRecipe() {
+//            // Create and insert a new RecipeModel into the context BEFORE showing editor
+//            let recipe = RecipeModel(
+//                name: DEFAULT_RECIPE_NAME,
+//                details: DEFAULT_RECIPE_DETAILS,
+//                cost: DEFAULT_RECIPE_COST,
+//                time: DEFAULT_RECIPE_TIME,
+//                difficulty: DEFAULT_RECIPE_DIFFICULTY,
+//                numPeople: DEFAULT_RECIPE_NUM_PEOPLE
+//            )
+//            modelContext.insert(recipe)  // insert to context so changes are saved automatically
+//            
+//            newRecipe = recipe
+//            showNewRecipeSheet = true
+//        }
 }
 
 #Preview {

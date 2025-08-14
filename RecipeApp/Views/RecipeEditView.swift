@@ -70,11 +70,13 @@ struct RecipeEditView: View {
                 Section {
                     VStack {
                         PhotosPicker(selection: $selectedPic) {
-                            if let imageData = imageData, let image = ImageModel(data: imageData).image {
-                                image
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(height: 200)
+                            if let imageData = imageData {
+                                if let image = ImageModel(data: imageData).image {
+                                    image
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(height: 200)
+                                }
                             } else {
                                 ContentUnavailableView("Upload image", systemImage: "fork.knife.circle", description: Text("Better in landscape orientation"))
                             }
@@ -243,6 +245,7 @@ struct RecipeEditView: View {
         }
         
         if let data = imageData {
+            // User provided an image
             if let imageModel = recipe.imageModel {
                 imageModel.data = data
             } else {
@@ -251,7 +254,7 @@ struct RecipeEditView: View {
                 recipe.imageModel = imageModel
             }
         } else {
-            // Optionally delete the image if user removed it
+            // No user image
             if let imageModel = recipe.imageModel {
                 modelContext.delete(imageModel)
                 recipe.imageModel = nil
@@ -259,28 +262,18 @@ struct RecipeEditView: View {
         }
         
         do {
+            modelContext.insert(recipe)
             try modelContext.save()
         } catch {
             print("Failed to save recipe: \(error)")
         }
         
-        // Navigate back and reset values.
+        // Navigate back
         dismiss()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            resetData()
-        }
     }
     
     func saveRecipeDisable() -> Bool {
-        let someIngredientHasName = ingredients.contains(where: { ingredient in
-            ingredient.name != nil && ingredient.name != ""
-        })
-        
-        let someStepHasTitle = steps.contains(where: { step in
-            step.title != ""
-        })
-        
-        return name.isEmpty || !someIngredientHasName || !someStepHasTitle
+        return name.isEmpty // || !someIngredientHasName || !someStepHasTitle
     }
     
     func loadImage(from item: PhotosPickerItem?) {

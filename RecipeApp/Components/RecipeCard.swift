@@ -46,15 +46,11 @@ struct RecipeCard: View {
     }
     
     var recipeImage: some View {
-        if let data = recipe.imageModel?.data,
-           let uiImage = UIImage(data: data) {
-            return Image(uiImage: uiImage)
-                .resizable()
-                .scaledToFill()
-        } else {
-            return Image(DEFAULT_RECIPE_COVER)
-                .resizable()
-                .scaledToFill()
+        if let image = recipe.imageModel?.image {
+            return image.resizable().scaledToFill()
+        }
+        else {
+            return Image(DEFAULT_RECIPE_COVER).resizable().scaledToFill()
         }
     }
     
