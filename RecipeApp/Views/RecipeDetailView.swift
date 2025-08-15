@@ -17,12 +17,12 @@ struct RecipeDetailView: View {
     @State private var newNumPeople: Int
     @State private var deleteAlertShowing: Bool
     @State private var showEditRecipeSheet: Bool
-    
+        
     var sharingURL: String { return "\(recipe.name)" }
     var multiplier: Double { Double(newNumPeople) / Double(recipe.numPeople) }
     
     init(recipe: RecipeModel) {
-        self.recipe = recipe
+        _recipe = .init(wrappedValue: recipe)
         _newNumPeople = State(initialValue: recipe.numPeople) // To avoid error about property initializer
         _deleteAlertShowing = State(initialValue: false)
         _showEditRecipeSheet = State(initialValue: false)

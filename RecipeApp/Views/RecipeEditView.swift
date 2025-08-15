@@ -7,6 +7,7 @@
 
 import SwiftUI
 import PhotosUI
+import SwiftData
 
 struct RecipeEditView: View {
     
@@ -19,46 +20,31 @@ struct RecipeEditView: View {
 
     // Main variables
     @Bindable var recipe: RecipeModel
-    @State private var name = DEFAULT_RECIPE_NAME
-    @State private var details = DEFAULT_RECIPE_DETAILS
-    @State private var time: Int = DEFAULT_RECIPE_TIME
-    @State private var cost: Cost = DEFAULT_RECIPE_COST
-    @State private var difficulty: Difficulty = DEFAULT_RECIPE_DIFFICULTY
-    @State private var numPeople = DEFAULT_RECIPE_NUM_PEOPLE
-    @State private var steps = [StepModel]()
-    @State private var ingredients = [IngredientModel]()
-    @State private var imageData: Data? = nil
 
-    // Other useful variables for images
+    // Keep image transient state locally
+    @State private var imageData: Data? = nil
     @State private var selectedPic: PhotosPickerItem?
-    
+
     // Other useful general variables
     let allIngredients = ["None"] + INGREDIENTS
     let allMeasurements = ["None"] + MEASUREMENTS
+
+    // Track whether this view created the recipe (so we insert only on save)
+    private let isNew: Bool
+    
+    // MARK: - Initializers
     
     init() {
-        // Create a new blank recipe
-        let newRecipe = RecipeModel(
-            name: DEFAULT_RECIPE_NAME,
-            details: DEFAULT_RECIPE_DETAILS,
-            cost: DEFAULT_RECIPE_COST,
-            time: DEFAULT_RECIPE_TIME,
-            difficulty: DEFAULT_RECIPE_DIFFICULTY,
-            numPeople: DEFAULT_RECIPE_NUM_PEOPLE
-        )
-        self.recipe = newRecipe
+        // Create a new blank recipe using defaults in RecipeModel
+        self._recipe = .init(wrappedValue: RecipeModel())
+        self.isNew = true
     }
 
     init(recipe: RecipeModel) {
-        self.recipe = recipe
-        _name = State(initialValue: recipe.name)
-        _details = State(initialValue: recipe.details)
-        _time = State(initialValue: recipe.time)
-        _cost = State(initialValue: recipe.cost)
-        _difficulty = State(initialValue: recipe.difficulty)
-        _numPeople = State(initialValue: recipe.numPeople)
-        _steps = State(initialValue: Array(recipe.steps))
-        _ingredients = State(initialValue: Array(recipe.ingredients))
+        self._recipe = .init(wrappedValue: recipe)
+        self.isNew = false
+
+        // Seed transient image data from model if present
         if let imageModel = recipe.imageModel {
             _imageData = State(initialValue: imageModel.data)
         }
@@ -67,6 +53,7 @@ struct RecipeEditView: View {
     var body: some View {
         NavigationStack {
             Form {
+                // MARK: - Photo section
                 Section {
                     VStack {
                         PhotosPicker(selection: $selectedPic) {
@@ -93,25 +80,30 @@ struct RecipeEditView: View {
                     }
                 }
                 
+                // MARK: - Basics
                 Section("Basics") {
-                    TextField("Name", text: $name)
+                    TextField("Name", text: $recipe.name)
                         .keyboardType(.default)
                     
-                    TextField("Details", text: $details, axis: .vertical)
+                    TextField("Details", text: $recipe.details, axis: .vertical)
                         .keyboardType(.default)
                 }
                 
+                // MARK: - Time
                 Section("Time (minutes)") {
-                    TextField("\(time)", value: $time, formatter: NumberFormatter())
+                    // Bind directly to model's time
+                    TextField("\(recipe.time)", value: $recipe.time, formatter: NumberFormatter())
                         .keyboardType(.numberPad)
                 }
                 
+                // MARK: - Number of people
                 Section("Number of people") {
-                    Stepper("^[\(numPeople) person](inflect: true)", value: $numPeople, in: DEFAULT_RECIPE_NUM_PEOPLE_RANGE)
+                    Stepper("^[\(recipe.numPeople) person](inflect: true)", value: $recipe.numPeople, in: DEFAULT_RECIPE_NUM_PEOPLE_RANGE)
                 }
                 
+                // MARK: - Difficulty
                 Section("Difficulty") {
-                    Picker("Difficulty", selection: $difficulty) {
+                    Picker("Difficulty", selection: $recipe.difficulty) {
                         ForEach(Difficulty.allCases, id: \.self) {
                             Text($0.description)
                         }
@@ -119,8 +111,9 @@ struct RecipeEditView: View {
                     .pickerStyle(.segmented)
                 }
                 
+                // MARK: - Cost
                 Section("Cost") {
-                    Picker("Cost", selection: $cost) {
+                    Picker("Cost", selection: $recipe.cost) {
                         ForEach(Cost.allCases, id: \.self) {
                             Text($0.symbol)
                         }
@@ -128,29 +121,48 @@ struct RecipeEditView: View {
                     .pickerStyle(.segmented)
                 }
                 
+                // MARK: - Steps
                 Section("Steps") {
-                    ForEach(Array($steps.enumerated()), id: \.element.id) { index, $step in
-                        StepCard(step: $step, order: index + 1)
+                    // Iterate indices and create Binding(get:set:) for each element
+                    ForEach(recipe.steps.indices, id: \.self) { index in
+                        StepCard(
+                            step: Binding(
+                                get: { recipe.steps[index] },
+                                set: { recipe.steps[index] = $0 }
+                            ),
+                            order: index + 1
+                        )
                     }
                     .onDelete(perform: deleteStep)
                     Button("Add step", systemImage: "plus", action: addStep)
                 }
                 
+                // MARK: - Ingredients
                 Section("Ingredients") {
-                    ForEach($ingredients, id: \.id) { $ingredient in
+                    ForEach(recipe.ingredients.indices, id: \.self) { index in
+                        // Local bindings to specific ingredient fields
+                        let nameBinding = Binding<String?>(
+                            get: { recipe.ingredients[index].name },
+                            set: { recipe.ingredients[index].name = $0 }
+                        )
+                        let quantityBinding = Binding<Double?>(
+                            get: { recipe.ingredients[index].quantity },
+                            set: { recipe.ingredients[index].quantity = $0 }
+                        )
+                        let measureBinding = Binding<String?>(
+                            get: { recipe.ingredients[index].measure },
+                            set: { recipe.ingredients[index].measure = $0 }
+                        )
+
                         VStack(alignment: .leading, spacing: 3) {
-                            
                             // Ingredient name picker
-                            Picker("Pick an ingredient", selection: Binding(
-                                get: { ingredient.name },
-                                set: { ingredient.name = $0 }
-                            )) {
+                            Picker("Pick an ingredient", selection: nameBinding) {
                                 Text("None").tag(Optional<String>.none)
                                 ForEach(INGREDIENTS, id: \.self) { item in
                                     Text(item).tag(Optional(item))
                                 }
                             }
-                            
+
                             // Second row: Quantity + Measurement
                             HStack {
                                 // Quantity input
@@ -158,24 +170,20 @@ struct RecipeEditView: View {
                                     Image(systemName: "number")
                                         .foregroundStyle(.gray)
                                     Text("Qty")
-                                    TextField("Quantity", value: $ingredient.quantity, format: .number)
+                                    TextField("Quantity", value: quantityBinding, format: .number)
                                         .keyboardType(.decimalPad)
                                 }
                                 
                                 Spacer()
                                 
                                 // Measurement picker
-                                Picker("Unit", selection: Binding(
-                                    get: { ingredient.measure },
-                                    set: { ingredient.measure = $0 }
-                                )) {
+                                Picker("Unit", selection: measureBinding) {
                                     Text("None").tag(Optional<String>.none)
                                     ForEach(MEASUREMENTS, id: \.self) { unit in
                                         Text(unit).tag(Optional(unit))
                                     }
                                 }
                                 .fixedSize() // To make the Picker not expand
-                                
                             }
                         }
                     }
@@ -183,7 +191,7 @@ struct RecipeEditView: View {
                     Button("Add ingredient", systemImage: "plus", action: addIngredient)
                 }
             }
-            .navigationTitle("New recipe")
+            .navigationTitle(isNew ? "New recipe" : "Edit recipe")
             .toolbar {
                 ToolbarItem(placement: .principal) { EmptyView() }
 
@@ -204,48 +212,38 @@ struct RecipeEditView: View {
                     }
                 }
             }
+            .onAppear {
+                // Ensure transient imageData is set from model if not already set
+                if imageData == nil {
+                    imageData = recipe.imageModel?.data
+                }
+            }
         }
     }
     
+    // MARK: - Actions for steps / ingredients
+    
     func addStep() {
-        steps.append(StepModel(title: "", instruction: ""))
+        recipe.steps.append(StepModel(title: "", instruction: ""))
     }
     
     func deleteStep(at offsets: IndexSet) {
-        steps.remove(atOffsets: offsets)
+        recipe.steps.remove(atOffsets: offsets)
     }
     
     func addIngredient() {
-        ingredients.append(IngredientModel(name: nil, quantity: nil, measure: nil))
+        recipe.ingredients.append(IngredientModel(name: nil, quantity: nil, measure: nil))
     }
     
     func deleteIngredient(at offsets: IndexSet) {
-        ingredients.remove(atOffsets: offsets)
+        recipe.ingredients.remove(atOffsets: offsets)
     }
     
+    // MARK: - Save / Reset / Helpers
+
     func saveRecipe() {
-        
-        // Update fields
-        recipe.name = name
-        recipe.details = details
-        recipe.time = time
-        recipe.cost = cost
-        recipe.difficulty = difficulty
-        recipe.numPeople = numPeople
-        
-        // Replace steps and ingredients
-        recipe.steps = []
-        for step in steps {
-            recipe.steps.append(StepModel(title: step.title, instruction: step.instruction))
-        }
-        
-        recipe.ingredients = []
-        for ing in ingredients {
-            recipe.ingredients.append(IngredientModel(name: ing.name, quantity: ing.quantity, measure: ing.measure))
-        }
-        
+        // Update image model (create / update / delete) using transient imageData
         if let data = imageData {
-            // User provided an image
             if let imageModel = recipe.imageModel {
                 imageModel.data = data
             } else {
@@ -254,15 +252,18 @@ struct RecipeEditView: View {
                 recipe.imageModel = imageModel
             }
         } else {
-            // No user image
             if let imageModel = recipe.imageModel {
                 modelContext.delete(imageModel)
                 recipe.imageModel = nil
             }
         }
         
-        do {
+        // Insert recipe if it was newly created in this view
+        if isNew {
             modelContext.insert(recipe)
+        }
+        
+        do {
             try modelContext.save()
         } catch {
             print("Failed to save recipe: \(error)")
@@ -273,7 +274,7 @@ struct RecipeEditView: View {
     }
     
     func saveRecipeDisable() -> Bool {
-        return name.isEmpty // || !someIngredientHasName || !someStepHasTitle
+        return recipe.name.isEmpty
     }
     
     func loadImage(from item: PhotosPickerItem?) {
@@ -292,14 +293,14 @@ struct RecipeEditView: View {
     }
     
     func resetData() {
-        name = DEFAULT_RECIPE_NAME
-        details = DEFAULT_RECIPE_DETAILS
-        time = DEFAULT_RECIPE_TIME
-        cost = DEFAULT_RECIPE_COST
-        difficulty = DEFAULT_RECIPE_DIFFICULTY
-        numPeople = DEFAULT_RECIPE_NUM_PEOPLE
-        steps = []
-        ingredients = []
+        recipe.name = DEFAULT_RECIPE_NAME
+        recipe.details = DEFAULT_RECIPE_DETAILS
+        recipe.time = DEFAULT_RECIPE_TIME
+        recipe.cost = DEFAULT_RECIPE_COST
+        recipe.difficulty = DEFAULT_RECIPE_DIFFICULTY
+        recipe.numPeople = DEFAULT_RECIPE_NUM_PEOPLE
+        recipe.steps = []
+        recipe.ingredients = []
         selectedPic = nil
         imageData = nil
     }

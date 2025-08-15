@@ -53,22 +53,36 @@ class RecipeModel: Identifiable, Hashable {
     var numPeople: Int
 
     @Relationship(deleteRule: .cascade)
-    var ingredients: [IngredientModel] = []
+    var ingredients: [IngredientModel]
 
     @Relationship(deleteRule: .cascade)
-    var steps: [StepModel] = []
+    var steps: [StepModel]
 
     @Relationship(deleteRule: .cascade)
     var imageModel: ImageModel?
 
-    init(name: String, details: String, cost: Cost, time: Int, difficulty: Difficulty, numPeople: Int) {
+    init(
+        name: String = DEFAULT_RECIPE_NAME,
+        details: String = DEFAULT_RECIPE_DETAILS,
+        cost: Cost = DEFAULT_RECIPE_COST,
+        time: Int = DEFAULT_RECIPE_TIME,
+        difficulty: Difficulty = DEFAULT_RECIPE_DIFFICULTY,
+        numPeople: Int = DEFAULT_RECIPE_NUM_PEOPLE,
+        steps: [StepModel] = [],
+        ingredients: [IngredientModel] = [],
+        imageModel: ImageModel? = nil
+    ) {
         self.name = name
         self.details = details
-        self.cost = cost
         self.time = time
+        self.cost = cost
         self.difficulty = difficulty
         self.numPeople = numPeople
+        self.steps = steps
+        self.ingredients = ingredients
+        self.imageModel = imageModel
     }
+
 }
 
 extension RecipeModel {

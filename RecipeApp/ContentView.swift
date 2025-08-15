@@ -19,7 +19,7 @@ struct ContentView: View {
                 .tabItem { Label("Home", systemImage: "house") }
                 .tag(0)
 
-            ProfileView()
+            ProfileView(user: .example)
                 .tabItem { Label("Profile", systemImage: "person.crop.circle") }
                 .tag(1)
         }
