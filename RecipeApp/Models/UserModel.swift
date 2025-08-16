@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-class User {
+class UserModel {
     var firstName: String
     var lastName: String
     var bio: String
@@ -41,6 +41,6 @@ class User {
     }
 }
 
-extension User {
-    static let example = User(firstName: "Pablo", lastName: "García", bio: "Cooking is just chemistry you can eat.", email: "pabloskyx13@gmail.com", password: "password123!", sex: "Male", age: 23, city: "Madrid", country: "Spain", address: "Calle Alcalá 68", profilePic: imageModelFromAsset(named: DEFAULT_PROFILE_PICTURE))
+extension UserModel {
+    static let example = UserModel(firstName: "Pablo", lastName: "García", bio: "Cooking is just chemistry you can eat.", email: "pabloskyx13@gmail.com", password: "password123!", sex: "Male", age: 23, city: "Madrid", country: "Spain", address: "Calle Alcalá 68", profilePic: imageModelFromAsset(named: DEFAULT_PROFILE_PICTURE))
 }

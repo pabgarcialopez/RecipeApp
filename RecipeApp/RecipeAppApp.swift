@@ -13,7 +13,7 @@ struct RecipeAppApp: App {
         WindowGroup {
             ContentView()
         }
-        .modelContainer(for: [RecipeModel.self, IngredientModel.self, StepModel.self, ImageModel.self])
+        .modelContainer(for: [RecipeModel.self, UserModel.self])
     }
 }
 

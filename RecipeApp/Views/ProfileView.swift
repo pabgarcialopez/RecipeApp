@@ -9,21 +9,9 @@ import SwiftUI
 
 struct ProfileView: View {
     
-    let user: User
+    let user: UserModel
     
     @State private var showEditProfileSheet = false
-    
-    private var logoutButton: some View {
-        return Button(action: logout) {
-            Text("Log out")
-                .bold()
-                .foregroundStyle(.white)
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(Color.red.opacity(0.85))
-                .clipShape(RoundedRectangle(cornerRadius: 15))
-        }
-    }
     
     var body: some View {
         NavigationStack {
@@ -43,9 +31,7 @@ struct ProfileView: View {
                             .font(.largeTitle)
                             
                     }.padding(.bottom, 10)
-                    
-                    Divider()
-                    
+                                        
                     VStack(alignment: .leading, spacing: 20) {
                         userDetail("Biography") { Text(user.bio) }
                         HStack(spacing: 20) {
@@ -58,10 +44,6 @@ struct ProfileView: View {
                         // For instance: num recipes, followers, likes.
                     }
                     .padding([.top, .bottom], 10)
-                                        
-                    Spacer()
-                    
-                    logoutButton
                 }
             }
             .padding(.init(top: 15, leading: 30, bottom: 15, trailing: 30))
@@ -82,7 +64,6 @@ struct ProfileView: View {
                         Image(systemName: "gear")
                     }
                 }
-                
             }
         }
     }
