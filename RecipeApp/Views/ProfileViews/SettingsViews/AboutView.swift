@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AboutView: View {
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) var dismiss
     
     var body: some View {
         ZStack {
@@ -22,14 +22,13 @@ struct AboutView: View {
             VStack {
                 HStack {
                     Spacer()
-                    Button {
-                        presentationMode.wrappedValue.dismiss()
-                    } label: {
-                        Image(systemName: "xmark.circle")
+                    Button(action: { dismiss() }) {
+                        Image(systemName: "xmark")
                             .resizable()
-                            .frame(width: 25, height: 25)
-                            .foregroundColor(.black)
+                            .frame(width: 15, height: 15)
+                            .foregroundColor(Color(.systemGray2))
                     }
+                    .padding(.trailing, 15)
                 }
                 Spacer()
             }

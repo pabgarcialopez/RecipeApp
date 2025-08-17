@@ -49,7 +49,7 @@ struct ProfileView: View {
             .padding(.init(top: 15, leading: 30, bottom: 15, trailing: 30))
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             .sheet(isPresented: $showEditProfileSheet) {
-                UserEditView()
+                UserEditView(user: .example)
             }
             .navigationTitle("Profile")
             .toolbar {
