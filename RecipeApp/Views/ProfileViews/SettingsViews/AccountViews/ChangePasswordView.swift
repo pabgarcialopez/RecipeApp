@@ -60,7 +60,7 @@ struct ChangePasswordView: View {
     
     func updateIndication() {
                 
-        if newPassword != newPasswordRepeated && !newPasswordRepeated.isEmpty {
+        if newPassword != newPasswordRepeated && !newPasswordRepeated.isEmpty && newPassword.count == newPasswordRepeated.count {
             indication = "Your new password does not match in both fields"
         }
         
@@ -71,12 +71,15 @@ struct ChangePasswordView: View {
     func saveChanges() {
         
         if currentPassword != user.password {
+            currentPassword = ""
             showAlert(title: "Incorrect current password", message: "Please, try again")
             return
         }
         
         if newPassword == user.password {
             showAlert(title: "Your new password cannot be your current one", message: "Please, try with another password")
+            newPassword = ""
+            newPasswordRepeated = ""
             return
         }
         
