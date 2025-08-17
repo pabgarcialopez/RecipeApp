@@ -33,4 +33,3 @@ func imageModelFromAsset(named name: String) -> ImageModel? {
     guard let data = uiImage.pngData() else { return nil }
     return ImageModel(data: data)
 }
-

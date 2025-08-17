@@ -37,5 +37,11 @@ let MEASUREMENTS = [
 // MARK: - User defaults
 let DEFAULT_PROFILE_PICTURE = "defaultProfilePicture"
 
+// MARK: - About / Privacy policy / Legal disclaimer / Terms & Conditions
+let ABOUT = "About this app"
+let PRIVACY_POLICY = "Privacy policy"
+let LEGAL_DISCLAIMER = "Legal disclaimer"
+let TERMS_AND_CONDITIONS = "Terms and conditions"
+
 
 

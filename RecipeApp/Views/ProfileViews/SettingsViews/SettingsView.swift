@@ -25,7 +25,7 @@ struct SettingsView: View {
                 
                 // About & Rate
                 Section {
-                    Button(action: showAboutModal) {
+                    Button(action: showAboutView) {
                         Label("About", systemImage: "info.circle")
                     }
                     
@@ -43,7 +43,7 @@ struct SettingsView: View {
             .listStyle(.insetGrouped)
             .navigationTitle("Settings")
             .fullScreenCover(isPresented: $showingAboutView) {
-                AboutView()
+                FullScreenModal { Text(ABOUT) }
             }
         }
     }
@@ -63,7 +63,7 @@ struct SettingsView: View {
         }
     }
     
-    func showAboutModal() { showingAboutView = true }
+    func showAboutView() { showingAboutView = true }
     
     func logout() {
         // TODO: Implement logout logic

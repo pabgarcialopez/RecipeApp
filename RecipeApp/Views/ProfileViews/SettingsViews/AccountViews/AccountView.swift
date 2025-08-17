@@ -11,8 +11,11 @@ struct AccountView: View {
     
     let user: UserModel
     
-    @State private var showingAboutModal = false
     @State private var showingDeleteAccountAlert = false
+    
+    @State private var modalContent = ""
+    @State private var isShowingModal = false
+    
     
     private var deleteAccountButton: some View {
         Button(action: showDeleteAccountAlert) {
@@ -50,6 +53,20 @@ struct AccountView: View {
                         Label("Change password", systemImage: "key")
                     })
                 }
+                
+                Section("App Policies") {
+                    Button(action: showPrivacyPolicyModal) {
+                        Label("Privacy policy", systemImage: "lock.shield")
+                    }
+                    
+                    Button(action: showLegalDisclaimerModal) {
+                        Label("Legal disclaimer", systemImage: "doc.text")
+                    }
+                    
+                    Button(action: showTermsAndConditionsModal) {
+                        Label("Terms and conditions", systemImage: "list.bullet")
+                    }
+                }
                  
                 deleteAccountButton
             }
@@ -59,17 +76,36 @@ struct AccountView: View {
             }, message: {
                 Text("All your data will be lost!")
             })
+            .fullScreenCover(isPresented: $isShowingModal) {
+                FullScreenModal { Text(modalContent) }
+            }
             .navigationTitle("Account")
             .navigationBarTitleDisplayMode(.inline)
         }
+        
     }
     
     func deleteAccount() {
-        
+        // TODO: implement delete account logic
     }
     
     func showDeleteAccountAlert() {
         showingDeleteAccountAlert = true
+    }
+    
+    func showPrivacyPolicyModal() {
+        isShowingModal = true
+        modalContent = PRIVACY_POLICY
+    }
+    
+    func showLegalDisclaimerModal() {
+        isShowingModal = true
+        modalContent = LEGAL_DISCLAIMER
+    }
+    
+    func showTermsAndConditionsModal() {
+        isShowingModal = true
+        modalContent = TERMS_AND_CONDITIONS
     }
 }
 
