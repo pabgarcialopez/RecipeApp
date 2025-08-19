@@ -38,7 +38,6 @@ struct AccountView: View {
         .listRowBackground(Color.clear)
     }
 
-    
     var body: some View {
         NavigationStack {
             List {

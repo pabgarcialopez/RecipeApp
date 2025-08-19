@@ -35,7 +35,7 @@ struct ProfileView: View {
                     VStack(alignment: .leading, spacing: 20) {
                         userDetail("Biography") { Text(user.bio) }
                         HStack(spacing: 20) {
-                            userDetail("City") { Text(user.city) }
+                            userDetail("City") { Text(user.address.city) }
                             userDetail("Email") { Text(user.email) }
                             userDetail("Age") { Text(user.age.description) }
                         }
