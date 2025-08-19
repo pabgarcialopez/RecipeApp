@@ -7,13 +7,12 @@
 
 import SwiftUI
 import PhotosUI
-import CountryKit
 
 struct UserEditView: View {
     
     @Bindable var user: UserModel
+    @Binding var path: NavigationPath
     
-    // Local, unsaved copy of the profile picture
     @State private var draftProfilePic: UIImage? = nil
     @State private var pickerItem: PhotosPickerItem? = nil
     
@@ -32,7 +31,6 @@ struct UserEditView: View {
                             .scaledToFill()
                     }
                 }
-                .padding(.top, 10)
                 .frame(width: 60, height: 60)
                 .clipShape(Circle())
                 .overlay(Circle().stroke(Color.black))
@@ -63,55 +61,58 @@ struct UserEditView: View {
             }
             
             VStack(spacing: 15) {
-                CustomTextField(title: "First name", prompt: "John", text: $user.firstName)
-                CustomTextField(title: "Last name", prompt: "Doe", text: $user.lastName)
-                CustomTextField(title: "Bio", prompt: "Tell us about you", text: $user.bio, axis: .vertical)
-                CustomTextField(title: "Email", prompt: "johnDoe@example.com", text: $user.email)
+                HStack(spacing: 15) {
+                    titledField("First name", field: TextField("First name", text: $user.firstName))
+                        .stroked()
+                    titledField("Last name", field: TextField("Last name", text: $user.lastName))
+                        .stroked()
+                }
                 
+                titledField("Bio", field:TextField("Tell us about you", text: $user.bio, axis: .vertical))
+                    .stroked()
+                
+                HStack {
+                    Button("Change email", action: goToChangeEmailView)
+                        .stroked()
+                    Spacer()
+                    Button("Change password", action: goToChangePasswordView)
+                        .stroked()
+                }
             }
-            
-//            var password: String
-//            var sex: Sex
-//            var age: Int
-//            var address: String
-                    
-                
-            
-
-            
-            Spacer()
-            
-//            Button("Save changes", action: saveChanges)
-//                .buttonStyle(.borderedProminent)
         }
         .padding()
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .onChange(of: pickerItem) {
             loadImage(from: pickerItem)
         }
+        
     }
     
+    func goToChangeEmailView() {
+        path = NavigationPath([SettingsDestination.changeEmail])
+    }
     
+    func goToChangePasswordView() {
+        path = NavigationPath([SettingsDestination.changePassword])
+    }
     
-    func loadImage(from item: PhotosPickerItem?) {
-        Task {
-            if let data = try? await item?.loadTransferable(type: Data.self),
-               let uiImage = UIImage(data: data) {
-                draftProfilePic = uiImage
-            }
+    func titledField<Field: View>(_ title: String, field: Field) -> some View {
+        VStack(alignment: .leading, spacing: 5) {
+            Text(title)
+                .font(.title3.bold())
+            field
         }
     }
     
-    func saveChanges() {
-        // TODO: implement saving profile
-        
-        // Save profile pic if changed
-        if let draftProfilePic,
-           let data = draftProfilePic.pngData() {
-            user.profilePic = ImageModel(data: data)
+    func loadImage(from item: PhotosPickerItem?) {
+        Task {
+            if let data = try? await item?.loadTransferable(type: Data.self) {
+                user.profilePic = ImageModel(data: data)
+            }
         }
     }
 }
 
 #Preview {
-    UserEditView(user: .example)
+    UserEditView(user: .example, path: .constant(NavigationPath()))
 }

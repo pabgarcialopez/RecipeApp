@@ -22,40 +22,39 @@ struct ChangeEmailView: View {
     let user: UserModel
     
     var body: some View {
-        NavigationStack {
-            Form {
-                Section {
-                    Text(user.email)
-                    TextField("New email", text: Binding(
-                        get: { newEmail },
-                        set: { newEmail = $0.lowercased() }
-                    ))
-                    .textInputAutocapitalization(.never)
-                    .autocorrectionDisabled(true)
+        Form {
+            Section {
+                Text(user.email)
+                TextField("New email", text: Binding(
+                    get: { newEmail },
+                    set: { newEmail = $0.lowercased() }
+                ))
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled(true)
+            }
+            
+            Section {
+                
+                if !indication.isEmpty {
+                    Text(indication)
+                        .font(.caption)
+                        .foregroundStyle(.red)
                 }
                 
-                Section {
-                    
-                    if !indication.isEmpty {
-                        Text(indication)
-                            .font(.caption)
-                            .foregroundStyle(.red)
-                    }
-                    
-                    Button("Save", action: saveChanges)
-                        .disabled(disableSaveButton())
-                        .frame(maxWidth: .infinity, alignment: .center)
-                }
+                Button("Save", action: saveChanges)
+                    .disabled(disableSaveButton())
+                    .frame(maxWidth: .infinity, alignment: .center)
             }
-            .alert(alertTitle, isPresented: $alertShowing, actions: {
-                Button("OK") { dismiss() }
-            }, message: {
-                Text(alertMessage)
-            })
-            .onChange(of: newEmail, updateIndication)
-            .navigationTitle("Change your email")
-            .navigationBarTitleDisplayMode(.inline)
         }
+        .alert(alertTitle, isPresented: $alertShowing, actions: {
+            Button("OK") { dismiss() }
+        }, message: {
+            Text(alertMessage)
+        })
+        .onChange(of: newEmail, updateIndication)
+        .navigationTitle("Change your email")
+        .navigationBarTitleDisplayMode(.inline)
+        
     }
     
     func isValidEmail() -> Bool {

@@ -11,11 +11,12 @@ struct AccountView: View {
     
     let user: UserModel
     
-    @State private var showingDeleteAccountAlert = false
+    @Binding var path: NavigationPath
     
+    @State private var showingDeleteAccountAlert = false
+
     @State private var modalContent = ""
     @State private var isShowingModal = false
-    
     
     private var deleteAccountButton: some View {
         Button(action: showDeleteAccountAlert) {
@@ -39,48 +40,46 @@ struct AccountView: View {
     }
 
     var body: some View {
-        NavigationStack {
-            List {
-                Section {
-                    NavigationLink(destination: UserEditView(user: .example), label: {
-                        Label("Personal details", systemImage: "person.fill")
-                    })
-                    NavigationLink(destination: ChangeEmailView(user: .example), label: {
-                        Label("Change email", systemImage: "mail")
-                    })
-                    NavigationLink(destination: ChangePasswordView(user: .example), label: {
-                        Label("Change password", systemImage: "key")
-                    })
+        List {
+            Section {
+                NavigationLink(value: SettingsDestination.userEdit) {
+                    Label("Personal details", systemImage: "person.fill")
+                }
+                NavigationLink(value: SettingsDestination.changeEmail) {
+                    Label("Change email", systemImage: "mail")
+                }
+                NavigationLink(value: SettingsDestination.changePassword) {
+                    Label("Change password", systemImage: "key")
+                }
+            }
+            
+            Section("App Policies") {
+                Button(action: showPrivacyPolicyModal) {
+                    Label("Privacy policy", systemImage: "lock.shield")
                 }
                 
-                Section("App Policies") {
-                    Button(action: showPrivacyPolicyModal) {
-                        Label("Privacy policy", systemImage: "lock.shield")
-                    }
-                    
-                    Button(action: showLegalDisclaimerModal) {
-                        Label("Legal disclaimer", systemImage: "doc.text")
-                    }
-                    
-                    Button(action: showTermsAndConditionsModal) {
-                        Label("Terms and conditions", systemImage: "list.bullet")
-                    }
+                Button(action: showLegalDisclaimerModal) {
+                    Label("Legal disclaimer", systemImage: "doc.text")
                 }
-                 
-                deleteAccountButton
+                
+                Button(action: showTermsAndConditionsModal) {
+                    Label("Terms and conditions", systemImage: "list.bullet")
+                }
             }
-            .alert("Sure to delete your account?", isPresented: $showingDeleteAccountAlert, actions: {
-                Button("Cancel", role: .cancel) {}
-                Button("Delete", role: .destructive, action: deleteAccount)
-            }, message: {
-                Text("All your data will be lost!")
-            })
-            .fullScreenCover(isPresented: $isShowingModal) {
-                FullScreenModal { Text(modalContent) }
-            }
-            .navigationTitle("Account")
-            .navigationBarTitleDisplayMode(.inline)
+             
+            deleteAccountButton
         }
+        .alert("Sure to delete your account?", isPresented: $showingDeleteAccountAlert, actions: {
+            Button("Cancel", role: .cancel) {}
+            Button("Delete", role: .destructive, action: deleteAccount)
+        }, message: {
+            Text("All your data will be lost!")
+        })
+        .fullScreenCover(isPresented: $isShowingModal) {
+            FullScreenModal { Text(modalContent) }
+        }
+        .navigationTitle("Account")
+        .navigationBarTitleDisplayMode(.inline)
         
     }
     
@@ -109,5 +108,5 @@ struct AccountView: View {
 }
 
 #Preview {
-    AccountView(user: .example)
+    AccountView(user: .example, path: .constant(NavigationPath()))
 }

@@ -7,14 +7,18 @@
 
 import SwiftUI
 
+enum SettingsDestination {
+    case settings, account, userEdit, changeEmail, changePassword
+}
+
 struct ProfileView: View {
     
     let user: UserModel
     
-    @State private var showEditProfileSheet = false
-    
+    @State private var path = NavigationPath()
+        
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             Group {
                 VStack(alignment: .leading) {
                     HStack(spacing: 20) {
@@ -34,11 +38,7 @@ struct ProfileView: View {
                                         
                     VStack(alignment: .leading, spacing: 20) {
                         userDetail("Biography") { Text(user.bio) }
-                        HStack(spacing: 20) {
-                            userDetail("City") { Text(user.address.city) }
-                            userDetail("Email") { Text(user.email) }
-                            userDetail("Age") { Text(user.age.description) }
-                        }
+                        userDetail("Email") { Text(user.email) }
                         
                         // TODO: input more info about user
                         // For instance: num recipes, followers, likes.
@@ -48,28 +48,29 @@ struct ProfileView: View {
             }
             .padding(.init(top: 15, leading: 30, bottom: 15, trailing: 30))
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-            .sheet(isPresented: $showEditProfileSheet) {
-                UserEditView(user: .example)
-            }
             .navigationTitle("Profile")
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button(action: editUserProfile) { Text("Edit profile") }
-                    Button("Edit profile", systemImage: "pencil", action: editUserProfile)
-                }
                 ToolbarItem(placement: .topBarTrailing) {
-                    NavigationLink {
-                        SettingsView()
-                    } label: {
+                    NavigationLink(value: SettingsDestination.settings) {
                         Image(systemName: "gear")
                     }
                 }
             }
+            .navigationDestination(for: SettingsDestination.self) { destination in
+                switch destination {
+                    case .settings:
+                        SettingsView(path: $path)
+                    case .account:
+                        AccountView(user: .example, path: $path)
+                    case .userEdit:
+                        UserEditView(user: .example, path: $path)
+                    case .changePassword:
+                        ChangePasswordView(user: .example)
+                    case .changeEmail:
+                        ChangeEmailView(user: .example)
+                }
+            }
         }
-    }
-    
-    func editUserProfile() {
-        showEditProfileSheet = true
     }
     
     func userDetail<Content: View>(_ title: String, @ViewBuilder content: () -> Content) -> some View {

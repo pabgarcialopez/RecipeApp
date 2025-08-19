@@ -8,7 +8,6 @@
 import Foundation
 import SwiftUI
 import UIKit
-import CountryKit
 
 // --------- Allow easy programatic navigation between tabs ---------
 struct SelectedTabKey: EnvironmentKey {
@@ -33,4 +32,27 @@ func imageModelFromAsset(named name: String) -> ImageModel? {
     guard let uiImage = UIImage(named: name) else { return nil }
     guard let data = uiImage.pngData() else { return nil }
     return ImageModel(data: data)
+}
+
+// --------- Stroked border -----------------------------------------
+struct Stroked: ViewModifier {
+    
+    let color: Color
+    let lineWidth: CGFloat
+    
+    func body(content: Content) -> some View {
+        content
+            .padding(.init(top: 10, leading: 20, bottom: 10, trailing: 20))
+            .overlay {
+                RoundedRectangle(cornerRadius: 22)
+                    .stroke(Color.black, lineWidth: 2)
+            }
+    }
+    
+}
+
+extension View {
+    func stroked(color: Color = .black, lineWidth: CGFloat = 1) -> some View {
+        modifier(Stroked(color: color, lineWidth: lineWidth))
+    }
 }

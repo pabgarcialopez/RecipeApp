@@ -25,37 +25,34 @@ struct ChangePasswordView: View {
     let user: UserModel
     
     var body: some View {
-        NavigationStack {
-            Form {
-                Section {
-                    SecureField("Current password", text: $currentPassword)
-                    SecureField("New password", text: $newPassword)
-                    SecureField("Type your new password again", text: $newPasswordRepeated)
+        Form {
+            Section {
+                SecureField("Current password", text: $currentPassword)
+                SecureField("New password", text: $newPassword)
+                SecureField("Type your new password again", text: $newPasswordRepeated)
+            }
+            
+            Section {
+                
+                if !indication.isEmpty {
+                    Text(indication)
+                        .font(.caption)
+                        .foregroundStyle(.red)
                 }
                 
-                Section {
-                    
-                    if !indication.isEmpty {
-                        Text(indication)
-                            .font(.caption)
-                            .foregroundStyle(.red)
-                    }
-                    
-                    Button("Save", action: saveChanges)
-                        .disabled(disableSaveButton())
-                        .frame(maxWidth: .infinity, alignment: .center)
-                }
-                .onChange(of: newPasswordRepeated, updateIndication)
+                Button("Save", action: saveChanges)
+                    .disabled(disableSaveButton())
+                    .frame(maxWidth: .infinity, alignment: .center)
             }
-            .alert(alertTitle, isPresented: $alertShowing, actions: {
-                Button("OK") { dismiss() }
-            }, message: {
-                Text(alertMessage)
-            })
-            .navigationTitle("Change your password")
-            .navigationBarTitleDisplayMode(.inline)
-            
+            .onChange(of: newPasswordRepeated, updateIndication)
         }
+        .alert(alertTitle, isPresented: $alertShowing, actions: {
+            Button("OK") { dismiss() }
+        }, message: {
+            Text(alertMessage)
+        })
+        .navigationTitle("Change your password")
+        .navigationBarTitleDisplayMode(.inline)
     }
     
     func updateIndication() {

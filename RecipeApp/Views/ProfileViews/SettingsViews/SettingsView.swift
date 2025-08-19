@@ -8,44 +8,50 @@
 import SwiftUI
 import StoreKit
 
+
+
 struct SettingsView: View {
     
     @Environment(\.requestReview) var requestReview
     @State private var showingAboutView = false
     
+    @Binding var path: NavigationPath
+
+    
     var body: some View {
-        NavigationStack {
-            List {
-                // General settings
-                Section("General") {
-                    NavigationLink(destination: AccountView(user: .example)) {
-                        Label("Account", systemImage: "person.crop.circle")
-                    }
-                }
-                
-                // About & Rate
-                Section {
-                    Button(action: showAboutView) {
-                        Label("About", systemImage: "info.circle")
-                    }
-                    
-                    Button(action: { requestReview() }) {
-                        Label("Rate app", systemImage: "star.bubble")
-                    }
-                }
-                
-                Section {
-                    logoutButton
-                        .listRowBackground(Color.clear)
-                        .listRowInsets(EdgeInsets())  // Removes default padding
+        
+        List {
+            // General settings
+            Section("General") {
+                NavigationLink(value: SettingsDestination.account) {
+                    Label("Account", systemImage: "person.crop.circle")
                 }
             }
-            .listStyle(.insetGrouped)
-            .navigationTitle("Settings")
-            .fullScreenCover(isPresented: $showingAboutView) {
-                FullScreenModal { Text(ABOUT) }
+            
+            // About & Rate
+            Section {
+                Button(action: showAboutView) {
+                    Label("About", systemImage: "info.circle")
+                }
+                
+                Button(action: { requestReview() }) {
+                    Label("Rate app", systemImage: "star.bubble")
+                }
+            }
+            
+            Section {
+                logoutButton
+                    .listRowBackground(Color.clear)
+                    .listRowInsets(EdgeInsets())  // Removes default padding
             }
         }
+        .listStyle(.insetGrouped)
+        .navigationTitle("Settings")
+        .fullScreenCover(isPresented: $showingAboutView) {
+            FullScreenModal { Text(ABOUT) }
+        }
+        
+        
     }
     
     private var logoutButton: some View {
@@ -71,5 +77,6 @@ struct SettingsView: View {
 }
 
 #Preview {
-    SettingsView()
+    SettingsView(path: .constant(NavigationPath()))
 }
+
