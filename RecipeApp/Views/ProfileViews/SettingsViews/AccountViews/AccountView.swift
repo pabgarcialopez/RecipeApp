@@ -45,12 +45,12 @@ struct AccountView: View {
                 NavigationLink(value: SettingsDestination.userEdit) {
                     Label("Personal details", systemImage: "person.fill")
                 }
-                NavigationLink(value: SettingsDestination.changeEmail) {
-                    Label("Change email", systemImage: "mail")
-                }
-                NavigationLink(value: SettingsDestination.changePassword) {
-                    Label("Change password", systemImage: "key")
-                }
+//                NavigationLink(value: SettingsDestination.changeEmail) {
+//                    Label("Change email", systemImage: "mail")
+//                }
+//                NavigationLink(value: SettingsDestination.changePassword) {
+//                    Label("Change password", systemImage: "key")
+//                }
             }
             
             Section("App Policies") {

@@ -8,10 +8,12 @@
 import SwiftUI
 
 enum SettingsDestination {
-    case settings, account, userEdit, changeEmail, changePassword
+    case settings, account, userEdit // , changeEmail, changePassword
 }
 
 struct ProfileView: View {
+    
+    @EnvironmentObject var auth: AuthViewModel
     
     let user: UserModel
     
@@ -23,7 +25,7 @@ struct ProfileView: View {
                 VStack(alignment: .leading) {
                     HStack(spacing: 20) {
                         // Profile picture
-                        (user.profilePic?.image ?? Image(DEFAULT_PROFILE_PICTURE))
+                        (user.picture?.image ?? Image(DEFAULT_PROFILE_PICTURE))
                             .resizable()
                             .scaledToFit()
                             .padding()
@@ -64,10 +66,10 @@ struct ProfileView: View {
                         AccountView(user: .example, path: $path)
                     case .userEdit:
                         UserEditView(user: .example, path: $path)
-                    case .changePassword:
-                        ChangePasswordView(user: .example)
-                    case .changeEmail:
-                        ChangeEmailView(user: .example)
+//                    case .changePassword:
+//                        ChangePasswordView(user: .example)
+//                    case .changeEmail:
+//                        ChangeEmailView(user: .example)
                 }
             }
         }
@@ -89,4 +91,5 @@ struct ProfileView: View {
 
 #Preview {
     ProfileView(user: .example)
+        .environmentObject(AuthViewModel())
 }

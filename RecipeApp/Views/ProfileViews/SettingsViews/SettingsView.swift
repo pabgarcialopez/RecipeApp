@@ -7,12 +7,12 @@
 
 import SwiftUI
 import StoreKit
-
-
+import Auth0
 
 struct SettingsView: View {
     
     @Environment(\.requestReview) var requestReview
+    @EnvironmentObject var auth: AuthViewModel
     @State private var showingAboutView = false
     
     @Binding var path: NavigationPath
@@ -72,7 +72,7 @@ struct SettingsView: View {
     func showAboutView() { showingAboutView = true }
     
     func logout() {
-        // TODO: Implement logout logic
+        auth.logout()
     }
 }
 

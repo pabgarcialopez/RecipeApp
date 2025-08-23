@@ -6,6 +6,14 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		5B21F8B32E5A101500CA2175 /* FirebaseAI in Frameworks */ = {isa = PBXBuildFile; productRef = 5B21F8B22E5A101500CA2175 /* FirebaseAI */; };
+		5B21F8B52E5A101500CA2175 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 5B21F8B42E5A101500CA2175 /* FirebaseAnalytics */; };
+		5B21F8B72E5A101500CA2175 /* FirebaseAppCheck in Frameworks */ = {isa = PBXBuildFile; productRef = 5B21F8B62E5A101500CA2175 /* FirebaseAppCheck */; };
+		5B21F8B92E5A101500CA2175 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 5B21F8B82E5A101500CA2175 /* FirebaseAuth */; };
+		5B21F8BB2E5A101500CA2175 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 5B21F8BA2E5A101500CA2175 /* FirebaseFirestore */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		5BCCF1472E3A976A00DEC853 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -65,6 +73,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5B21F8B52E5A101500CA2175 /* FirebaseAnalytics in Frameworks */,
+				5B21F8B72E5A101500CA2175 /* FirebaseAppCheck in Frameworks */,
+				5B21F8B32E5A101500CA2175 /* FirebaseAI in Frameworks */,
+				5B21F8BB2E5A101500CA2175 /* FirebaseFirestore in Frameworks */,
+				5B21F8B92E5A101500CA2175 /* FirebaseAuth in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -126,6 +139,11 @@
 			);
 			name = RecipeApp;
 			packageProductDependencies = (
+				5B21F8B22E5A101500CA2175 /* FirebaseAI */,
+				5B21F8B42E5A101500CA2175 /* FirebaseAnalytics */,
+				5B21F8B62E5A101500CA2175 /* FirebaseAppCheck */,
+				5B21F8B82E5A101500CA2175 /* FirebaseAuth */,
+				5B21F8BA2E5A101500CA2175 /* FirebaseFirestore */,
 			);
 			productName = RecipeApp;
 			productReference = 5BCCF1392E3A976700DEC853 /* RecipeApp.app */;
@@ -210,6 +228,7 @@
 			mainGroup = 5BCCF1302E3A976700DEC853;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
+				5B21F8B12E5A101500CA2175 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 5BCCF13A2E3A976700DEC853 /* Products */;
@@ -574,6 +593,45 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		5B21F8B12E5A101500CA2175 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.1.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		5B21F8B22E5A101500CA2175 /* FirebaseAI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5B21F8B12E5A101500CA2175 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAI;
+		};
+		5B21F8B42E5A101500CA2175 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5B21F8B12E5A101500CA2175 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		5B21F8B62E5A101500CA2175 /* FirebaseAppCheck */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5B21F8B12E5A101500CA2175 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAppCheck;
+		};
+		5B21F8B82E5A101500CA2175 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5B21F8B12E5A101500CA2175 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		5B21F8BA2E5A101500CA2175 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5B21F8B12E5A101500CA2175 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 5BCCF1312E3A976700DEC853 /* Project object */;
 }

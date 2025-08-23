@@ -7,6 +7,9 @@
 
 import Foundation
 
+// MARK: - App meta data
+let APP_NAME = "Recipe App"
+
 // MARK: - Recipe defaults
 let DEFAULT_RECIPE_NAME = ""
 let DEFAULT_RECIPE_DETAILS = ""
