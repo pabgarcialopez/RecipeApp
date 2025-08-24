@@ -7,7 +7,6 @@
 
 import SwiftUI
 import StoreKit
-import Auth0
 
 struct SettingsView: View {
     
@@ -72,7 +71,7 @@ struct SettingsView: View {
     func showAboutView() { showingAboutView = true }
     
     func logout() {
-        auth.logout()
+        auth.signOut()
     }
 }
 

@@ -15,7 +15,7 @@ struct RootView: View {
             if auth.isAuthenticated {
                 ContentView()
             } else {
-                LoginView()
+                AuthenticationView()
             }
         }
         .environmentObject(auth)

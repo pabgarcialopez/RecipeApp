@@ -6,11 +6,11 @@
 //
 
 import Foundation
-import FirebaseFirestore
+//import FirebaseFirestore
 
 class UserModel: Identifiable, Codable, ObservableObject {
-    @DocumentID var id: String?
-    
+//    @DocumentID var id: String?
+    var id: String?
     @Published var firstName: String
     @Published var lastName: String
     @Published var bio: String

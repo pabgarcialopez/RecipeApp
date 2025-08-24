@@ -13,7 +13,7 @@ enum SettingsDestination {
 
 struct ProfileView: View {
     
-    @EnvironmentObject var auth: AuthViewModel
+//    @EnvironmentObject var auth: AuthViewModel
     
     let user: UserModel
     
@@ -25,13 +25,13 @@ struct ProfileView: View {
                 VStack(alignment: .leading) {
                     HStack(spacing: 20) {
                         // Profile picture
-                        (user.picture?.image ?? Image(DEFAULT_PROFILE_PICTURE))
-                            .resizable()
-                            .scaledToFit()
-                            .padding()
-                            .overlay(Circle().stroke(Color.black))
-                            .clipShape(Circle())
-                            .frame(width: 80, height: 80)
+//                        (user.picture?.image ?? Image(DEFAULT_PROFILE_PICTURE))
+//                            .resizable()
+//                            .scaledToFit()
+//                            .padding()
+//                            .overlay(Circle().stroke(Color.black))
+//                            .clipShape(Circle())
+//                            .frame(width: 80, height: 80)
                         
                         Text(user.fullName)
                             .font(.largeTitle)
@@ -82,14 +82,10 @@ struct ProfileView: View {
             content()
         }
     }
-    
-    func logout() {
-        
-    }
 
 }
 
 #Preview {
     ProfileView(user: .example)
-        .environmentObject(AuthViewModel())
+//        .environmentObject(AuthViewModel())
 }
