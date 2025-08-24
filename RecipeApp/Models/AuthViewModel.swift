@@ -18,7 +18,8 @@ class AuthViewModel: ObservableObject {
     }
     
     func signUp(email: String, password: String, completion: @escaping (Result<String, Error>) -> Void) {
-        Auth.auth().createUser(withEmail: email, password: password) { result, error in
+        Auth.auth().createUser(withEmail: email, password: password) { [weak self] result, error in
+            guard let self = self else { return }
             if let error = error {
                 print("Sign Up Error: \(error.localizedDescription)")
                 completion(.failure(error))
@@ -34,7 +35,8 @@ class AuthViewModel: ObservableObject {
     }
     
     func signIn(email: String, password: String, completion: @escaping (Result<String, Error>) -> Void) {
-        Auth.auth().signIn(withEmail: email, password: password) { result, error in
+        Auth.auth().signIn(withEmail: email, password: password) { [weak self] result, error in
+            guard let self = self else { return }
             if let error = error {
                 print("Sign In Error: \(error.localizedDescription)")
                 completion(.failure(error))
